@@ -1,5 +1,5 @@
 {
-  "name": "react-hono-rpc-template",
+  "name": "react-hono-rpc-ddd-template",
   "private": true,
   "workspaces": [
     "frontend",

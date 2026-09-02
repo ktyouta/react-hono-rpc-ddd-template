@@ -25,7 +25,7 @@ JWT 認証付きのフルスタックテンプレート。React フロントエ�
 ## ディレクトリ構成
 
 ```
-react-hono-rpc-template/
+react-hono-rpc-ddd-template/
 ├── backend/                  # Hono バックエンド（Cloudflare Workers）
 │   ├── src/
 │   │   ├── domain/           # Entity・Value Object・Repository interface（何にも依存しない）

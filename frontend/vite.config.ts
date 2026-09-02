@@ -3,6 +3,7 @@
 
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 import path from 'node:path';
@@ -11,7 +12,41 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      // main.tsx側で virtual:pwa-register を呼び出すため、自動登録スクリプトの注入は行わない
+      injectRegister: null,
+      manifest: {
+        name: 'React Hono RPC DDD Template',
+        short_name: 'React Hono RPC DDD Template',
+        description: 'React + Hono + RPC を用いたフロントエンド・バックエンド統合テンプレート（認証付き）',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#18181b',
+        theme_color: '#18181b',
+        icons: [
+          {
+            src: '/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
+      },
+    }),
+  ],
   build: {
     minify: 'terser',
     terserOptions: {
@@ -22,8 +57,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '@backend': path.resolve(__dirname, '../backend/src'),
+      '@': path.resolve(dirname, 'src'),
+      '@backend': path.resolve(dirname, '../backend/src'),
     },
   },
   server: {

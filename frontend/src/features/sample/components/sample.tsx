@@ -1,3 +1,4 @@
+import { Button } from '@/components';
 import reactLogo from '../../../assets/react.svg';
 import viteLogo from '/vite.svg';
 
@@ -28,9 +29,9 @@ export const Sample = (props: Props) => {
             </div>
             <h1>Vite + React Header message</h1>
             <div className="p-8">
-                <button onClick={props.click}>
+                <Button colorType="blue" sizeType="large" className="px-4 py-2" onClick={props.click}>
                     count is {props.count}
-                </button>
+                </Button>
                 <p>
                     Edit <code>src/App.tsx</code> and save to test HMR
                 </p>

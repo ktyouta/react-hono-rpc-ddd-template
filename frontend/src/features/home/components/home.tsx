@@ -1,4 +1,5 @@
-import reactLogo from '../../../../assets/react.svg';
+import { Button } from '@/components';
+import reactLogo from '../../../assets/react.svg';
 import viteLogo from '/vite.svg';
 
 type Props = {
@@ -34,12 +35,9 @@ export const Home = (props: Props) => {
             <h1>Vite + React Header message</h1>
             <h1 className="text-2xl font-bold mb-4">React + Hono RPC Template</h1>
             <div className="p-8">
-                <button
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    onClick={props.click}
-                >
+                <Button colorType="blue" sizeType="large" className="px-4 py-2" onClick={props.click}>
                     count is {props.count}
-                </button>
+                </Button>
 
                 {/* RPC Health Check サンプル */}
                 <div className="mt-8 p-4 border rounded-lg">
@@ -56,12 +54,9 @@ export const Home = (props: Props) => {
                             <p className="text-sm text-gray-500">Timestamp: {props.healthTimestamp}</p>
                         </div>
                     )}
-                    <button
-                        className="mt-2 px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
-                        onClick={props.refetchHealth}
-                    >
+                    <Button colorType="blue" sizeType="small" className="text-sm" onClick={props.refetchHealth}>
                         Refresh
-                    </button>
+                    </Button>
                 </div>
             </div>
             <p className="text-[#888]">
