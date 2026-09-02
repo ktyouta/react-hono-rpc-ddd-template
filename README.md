@@ -28,11 +28,27 @@ JWT 認証付きのフルスタックテンプレート。React フロントエ�
 react-hono-rpc-template/
 ├── backend/                  # Hono バックエンド（Cloudflare Workers）
 │   ├── src/
-│   │   ├── api/              # エンドポイント（controller / repository / service / dto）
+│   │   ├── domain/           # Entity・Value Object・Repository interface（何にも依存しない）
+│   │   │   ├── user/         #   プロフィール管理
+│   │   │   ├── auth/         #   認証（login/logout/password/token/credential）
+│   │   │   └── sample/
+│   │   ├── application/      # Usecase（メインロジック。Repository interface 経由で domain を操作）
+│   │   │   ├── user/usecase/
+│   │   │   ├── auth/usecase/
+│   │   │   └── sample/usecase/
+│   │   ├── infrastructure/   # Repository 実装（Drizzle ORM）・DB スキーマ・DB クライアント
+│   │   │   ├── db/
+│   │   │   ├── user/repository/
+│   │   │   ├── auth/repository/
+│   │   │   └── sample/repository/
+│   │   ├── presentation/     # Controller・DTO・Zod スキーマ（HTTP 入出力のみ）
+│   │   │   ├── user/
+│   │   │   ├── auth/
+│   │   │   ├── health/
+│   │   │   └── sample/
 │   │   ├── config/           # 環境変数設定（EnvConfig）
-│   │   ├── domain/           # ドメインオブジェクト（AccessToken, RefreshToken 等）
-│   │   ├── infrastructure/   # DB スキーマ定義（Drizzle ORM）
 │   │   ├── middleware/       # ミドルウェア（認証, CORS, ログ等）
+│   │   ├── rpc/              # RPC 型エクスポート専用
 │   │   └── index.ts          # エントリポイント、AppType エクスポート
 │   ├── drizzle/              # マイグレーションファイル（drizzle-kit generate 出力先）
 │   ├── seed/                 # Seed データ
@@ -48,6 +64,8 @@ react-hono-rpc-template/
 │   └── .storybook/           # Storybook 設定
 └── package.json              # ルート（npm workspaces）
 ```
+
+バックエンドは DDD の4層アーキテクチャ（`presentation → application → domain ← infrastructure`）を採用している。`domain` は何にも依存せず、Repository はインターフェースを `domain` に置き `infrastructure` が実装する（依存性逆転）。詳細な設計規約は `.claude/agents/backend-architect.md` を参照。
 
 ## クイックスタート
 

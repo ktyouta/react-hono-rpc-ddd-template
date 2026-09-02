@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { AccessToken } from "../../src/domain/access-token/access-token";
-import { FrontUserId } from "../../src/domain";
-import { Header } from "../../src/domain/header/header";
+import { AccessToken, Header } from "../../src/domain/auth";
+import { UserId } from "../../src/domain/user";
 import type { EnvConfig } from "../../src/config";
 
 const testConfig: EnvConfig = {
@@ -12,6 +11,7 @@ const testConfig: EnvConfig = {
     pepper: "test-pepper",
     corsOrigin: ["http://localhost:5173"],
     isProduction: false,
+    allowUserOperation: true,
 };
 
 /**
@@ -26,7 +26,7 @@ function createMockRequest(headers: Record<string, string> = {}): Request {
 describe("AccessToken", () => {
 
   it("アクセストークンを生成できること", async () => {
-    const userId = FrontUserId.of(1);
+    const userId = UserId.of("01ARZ3NDEKTSV4RRFFQ69G5FAV");
     const accessToken = await AccessToken.create(userId, testConfig);
 
     expect(accessToken.token).toBeDefined();
@@ -34,15 +34,15 @@ describe("AccessToken", () => {
   });
 
   it("JWT形式（3つのドット区切り）で生成されること", async () => {
-    const userId = FrontUserId.of(1);
+    const userId = UserId.of("01ARZ3NDEKTSV4RRFFQ69G5FAV");
     const accessToken = await AccessToken.create(userId, testConfig);
 
     expect(accessToken.token.split(".")).toHaveLength(3);
   });
 
   it("異なるユーザーIDで異なるトークンが生成されること", async () => {
-    const userId1 = FrontUserId.of(1);
-    const userId2 = FrontUserId.of(2);
+    const userId1 = UserId.of("01ARZ3NDEKTSV4RRFFQ69G5FAV");
+    const userId2 = UserId.of("01BX5ZZKBKACTAV9WEVGEMMVRZ");
     const token1 = await AccessToken.create(userId1, testConfig);
     const token2 = await AccessToken.create(userId2, testConfig);
 
@@ -51,7 +51,7 @@ describe("AccessToken", () => {
 
   describe("get", () => {
     it("正常なヘッダからトークンを取得できること", async () => {
-      const userId = FrontUserId.of(1);
+      const userId = UserId.of("01ARZ3NDEKTSV4RRFFQ69G5FAV");
       const createdToken = await AccessToken.create(userId, testConfig);
 
       const request = createMockRequest({
@@ -108,11 +108,11 @@ describe("AccessToken", () => {
 
   describe("getPayload", () => {
     it("ユーザーIDを取得できること", async () => {
-      const userId = FrontUserId.of(42);
+      const userId = UserId.of("01J9ZK8RCF3G4X7T9K2M5N6P8Q");
       const accessToken = await AccessToken.create(userId, testConfig);
 
       const extractedUserId = await accessToken.getPayload();
-      expect(extractedUserId.value).toBe(42);
+      expect(extractedUserId.value).toBe("01J9ZK8RCF3G4X7T9K2M5N6P8Q");
     });
 
     it("不正なキーの場合にエラーになること", async () => {
