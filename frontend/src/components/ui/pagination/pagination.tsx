@@ -40,8 +40,8 @@ export function Pagination({ currentPage, totalPages, onPageChange }: PropsType)
                 className={cn(
                     "flex items-center justify-center w-9 h-9 rounded",
                     currentPage === 1
-                        ? "text-gray-300 cursor-not-allowed"
-                        : "text-gray-600 hover:bg-gray-100"
+                        ? "text-ink-sub/40 cursor-not-allowed"
+                        : "text-ink-sub hover:bg-canvas"
                 )}
             >
                 <HiChevronLeft className="size-5" />
@@ -50,7 +50,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: PropsType)
                 page === '...' ? (
                     <span
                         key={`ellipsis-${i}`}
-                        className="w-9 h-9 flex items-center justify-center text-gray-400 text-sm select-none"
+                        className="w-9 h-9 flex items-center justify-center text-ink-sub/70 text-sm select-none"
                     >
                         ...
                     </span>
@@ -64,8 +64,8 @@ export function Pagination({ currentPage, totalPages, onPageChange }: PropsType)
                         className={cn(
                             "w-9 h-9 rounded text-sm",
                             currentPage === page
-                                ? "bg-cyan-500 text-white font-medium"
-                                : "text-gray-600 hover:bg-gray-100"
+                                ? "bg-accent text-white font-medium"
+                                : "text-ink-sub hover:bg-canvas"
                         )}
                     >
                         {page}
@@ -80,8 +80,8 @@ export function Pagination({ currentPage, totalPages, onPageChange }: PropsType)
                 className={cn(
                     "flex items-center justify-center w-9 h-9 rounded",
                     currentPage === totalPages
-                        ? "text-gray-300 cursor-not-allowed"
-                        : "text-gray-600 hover:bg-gray-100"
+                        ? "text-ink-sub/40 cursor-not-allowed"
+                        : "text-ink-sub hover:bg-canvas"
                 )}
             >
                 <HiChevronRight className="size-5" />

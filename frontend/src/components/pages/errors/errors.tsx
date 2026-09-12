@@ -14,7 +14,7 @@ export function Errors() {
         <div className="w-full h-screen p-2 box-border text-center">
             <div className="h-[87%] flex items-center justify-center">
                 <div className="flex flex-col gap-2 items-center">
-                    <MdErrorOutline className="text-[40px] text-red-500" />
+                    <MdErrorOutline className="text-[40px] text-danger" />
                     <h5 className="text-xl font-bold">
                         エラーが発生しました
                     </h5>
@@ -23,7 +23,7 @@ export function Errors() {
                     </p>
                 </div>
             </div>
-            <div className="h-[13%] flex justify-center items-center gap-1 text-blue-500">
+            <div className="h-[13%] flex justify-center items-center gap-1 text-accent">
                 <MdHome className="text-2xl mr-1" />
                 <span
                     onClick={() => {

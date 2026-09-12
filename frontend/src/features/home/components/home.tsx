@@ -43,7 +43,7 @@ export const Home = (props: Props) => {
                 <div className="mt-8 p-4 border rounded-lg">
                     <h2 className="text-lg font-semibold mb-2">RPC Health Check</h2>
                     {props.isHealthLoading && (
-                        <p className="text-gray-500">Loading...</p>
+                        <p className="text-ink-sub">Loading...</p>
                     )}
                     {props.isHealthError && (
                         <p className="text-red-500">Error: Failed to fetch health status</p>
@@ -51,7 +51,7 @@ export const Home = (props: Props) => {
                     {props.healthStatus && (
                         <div className="space-y-1">
                             <p>Status: <span className="text-green-600 font-medium">{props.healthStatus}</span></p>
-                            <p className="text-sm text-gray-500">Timestamp: {props.healthTimestamp}</p>
+                            <p className="text-sm text-ink-sub">Timestamp: {props.healthTimestamp}</p>
                         </div>
                     )}
                     <Button colorType="blue" sizeType="small" className="text-sm" onClick={props.refetchHealth}>
@@ -59,7 +59,7 @@ export const Home = (props: Props) => {
                     </Button>
                 </div>
             </div>
-            <p className="text-[#888]">
+            <p className="text-ink-sub">
                 Click on the Vite and React logos to learn more footer message
             </p>
         </div>

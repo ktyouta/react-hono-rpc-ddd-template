@@ -33,7 +33,7 @@ export const Checkbox = ({
                 onChange(e.target.checked);
             }}
             disabled={disabled}
-            className={cn(sizeClasses[size], "accent-blue-500", className)}
+            className={cn(sizeClasses[size], "accent-accent", className)}
             {...rest}
         />
     );

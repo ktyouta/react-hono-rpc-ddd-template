@@ -59,14 +59,14 @@ export function Signup(props: PropsType) {
     } = { ...props };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8">
+        <div className="min-h-screen bg-canvas flex items-center justify-center px-4 py-8">
             {isLoading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10">
                     <Spinner size={40} />
                 </div>
             )}
-            <div className="w-full max-w-lg bg-white rounded-xl shadow-lg p-8 sm:p-10">
-                <h1 className="text-2xl font-bold text-gray-800 text-center mb-8">
+            <div className="w-full max-w-lg bg-surface rounded-xl shadow-lg p-8 sm:p-10">
+                <h1 className="text-2xl font-bold text-accent text-center mb-8">
                     アカウント作成
                 </h1>
                 {errMessage && (
@@ -76,11 +76,11 @@ export function Signup(props: PropsType) {
                 )}
                 <div className="flex flex-col gap-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-ink mb-2">
                             ユーザー名（3〜30文字）
                         </label>
                         <Textbox
-                            className={`w-full h-12 px-4 rounded-lg border-gray-300 ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
+                            className={`w-full h-12 px-4 rounded-lg ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
                             type="text"
                             maxLength={30}
                             placeholder="UserName"
@@ -92,39 +92,39 @@ export function Signup(props: PropsType) {
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-ink mb-2">
                             生年月日
                         </label>
                         <div className="flex items-center gap-2">
                             <Select
                                 options={yearCoomboList}
-                                className="flex-1 h-12 px-3 rounded-lg border-gray-300"
+                                className="flex-1 h-12 px-3 rounded-lg"
                                 registration={register("birthday.year")}
                             />
-                            <span className="text-gray-600 shrink-0">年</span>
+                            <span className="text-ink-sub shrink-0">年</span>
                             <Select
                                 options={MONTH_LIST}
-                                className="flex-1 h-12 px-3 rounded-lg border-gray-300"
+                                className="flex-1 h-12 px-3 rounded-lg"
                                 registration={register("birthday.month")}
                             />
-                            <span className="text-gray-600 shrink-0">月</span>
+                            <span className="text-ink-sub shrink-0">月</span>
                             <Select
                                 options={getDayList(watch('birthday.year'), watch('birthday.month'))}
-                                className="flex-1 h-12 px-3 rounded-lg border-gray-300"
+                                className="flex-1 h-12 px-3 rounded-lg"
                                 registration={register("birthday.day")}
                             />
-                            <span className="text-gray-600 shrink-0">日</span>
+                            <span className="text-ink-sub shrink-0">日</span>
                         </div>
                         {errors.birthday?.message && (
                             <p className="text-red-500 text-xs mt-2">{errors.birthday.message}</p>
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-ink mb-2">
                             パスワード
                         </label>
                         <Textbox
-                            className={`w-full h-12 px-4 rounded-lg border-gray-300 ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
+                            className={`w-full h-12 px-4 rounded-lg ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
                             type="password"
                             maxLength={30}
                             autoComplete="off"
@@ -135,11 +135,11 @@ export function Signup(props: PropsType) {
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-ink mb-2">
                             確認用パスワード
                         </label>
                         <Textbox
-                            className={`w-full h-12 px-4 rounded-lg border-gray-300 ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : ''}`}
+                            className={`w-full h-12 px-4 rounded-lg ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : ''}`}
                             type="password"
                             maxLength={30}
                             autoComplete="off"
@@ -152,14 +152,14 @@ export function Signup(props: PropsType) {
                     <div className="flex flex-col sm:flex-row gap-3 mt-4">
                         <button
                             type="button"
-                            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors"
+                            className="flex-1 border-2 border-accent/30 bg-surface hover:bg-canvas text-ink-sub font-medium py-3 px-4 rounded-lg transition-colors"
                             onClick={back}
                         >
                             戻る
                         </button>
                         <button
                             type="button"
-                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                            className="flex-1 bg-accent hover:bg-accent-hover text-white font-medium py-3 px-4 rounded-lg transition-colors"
                             onClick={handleConfirm}
                         >
                             登録
