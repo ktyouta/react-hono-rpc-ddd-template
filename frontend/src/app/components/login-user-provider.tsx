@@ -4,6 +4,7 @@ import { createCtx } from "@/utils/create-ctx";
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginUserType } from "../api/verify";
+import { SetThemeContext } from "./theme-provider";
 
 // ログインユーザー情報
 export const LoginUserContext = createCtx<LoginUserType | null>();
@@ -21,6 +22,8 @@ export function LoginUserProvider(props: PropsType) {
     const [loginUser, setLoginUser] = useState<LoginUserType | null>(props.loginUser);
     // ルーティング用
     const navigate = useNavigate();
+    // テーマ状態(setter)
+    const setTheme = SetThemeContext.useCtx();
 
     /**
      * ログイン画面に遷移
@@ -43,6 +46,13 @@ export function LoginUserProvider(props: PropsType) {
             moveLogin,
         });
     }, []);
+
+    // ログインユーザーのダークモード設定をThemeContextに反映
+    useEffect(() => {
+        if (loginUser) {
+            setTheme(loginUser.darkMode ? 'dark' : 'light');
+        }
+    }, [loginUser?.darkMode, setTheme]);
 
     return (
         <LoginUserContext.Provider value={loginUser}>

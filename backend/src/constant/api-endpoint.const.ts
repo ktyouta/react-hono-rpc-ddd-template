@@ -11,6 +11,7 @@ export const API_ENDPOINT = {
   VERIFY: "/api/v1/verify",
   USER_LOGOUT: "/api/v1/user-logout",
   USER_PASSWORD: "/api/v1/user-password/:userId",
+  USER_DARK_MODE: "/api/v1/user-dark-mode/:userId",
 } as const;
 
 export type ApiEndpointType = (typeof API_ENDPOINT)[keyof typeof API_ENDPOINT];

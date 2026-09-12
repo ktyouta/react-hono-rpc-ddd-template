@@ -7,6 +7,7 @@ export type UserProfile = {
   id: string;
   name: string;
   birthday: string;
+  darkMode: boolean;
 };
 
 /**

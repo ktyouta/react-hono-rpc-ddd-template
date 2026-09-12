@@ -23,6 +23,7 @@ export const userMaster = sqliteTable("user_master", {
   name: text("name").notNull().unique(),
   birthday: text("birthday").notNull(),
   lastLoginDate: text("last_login_date"),
+  darkMode: integer("dark_mode", { mode: "boolean" }).notNull().default(false),
   deleteFlg: integer("delete_flg", { mode: "boolean" }).notNull().default(false),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),

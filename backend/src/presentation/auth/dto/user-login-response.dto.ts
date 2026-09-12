@@ -6,6 +6,7 @@ export type UserLoginResponseType = {
     id: string;
     name: string;
     birthday: string;
+    darkMode: boolean;
   };
 };
 
@@ -19,6 +20,7 @@ export class UserLoginResponseDto {
         id: userInfo.id,
         name: userInfo.name,
         birthday: userInfo.birthday,
+        darkMode: userInfo.darkMode,
       },
     };
   }

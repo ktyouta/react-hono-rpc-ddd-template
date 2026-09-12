@@ -9,6 +9,7 @@ import { UpdatePasswordContainer } from '@/features/updatepassword/components/up
 import { UpdateUserContainer } from '@/features/updateuser/components/update-user-container';
 import { useEffect } from 'react';
 import { useLocation, useNavigationType, useRoutes } from 'react-router-dom';
+import { DashboardContainer } from './dashboard-container';
 import { GuestRoute } from './guest-route';
 import { ProtectedRoute } from './protected-route';
 
@@ -47,6 +48,17 @@ const routerList = [
         element: <ProtectedRoute />,
         children: [
             {
+                element: <DashboardContainer />,
+                children: [
+                    {
+                        path: paths.mypage.path,
+                        element: (
+                            <MyPage />
+                        )
+                    }
+                ]
+            },
+            {
                 path: paths.updateUser.path,
                 element: (
                     <UpdateUserContainer />
@@ -58,12 +70,6 @@ const routerList = [
                     <UpdatePasswordContainer />
                 )
             },
-            {
-                path: paths.mypage.path,
-                element: (
-                    <MyPage />
-                )
-            }
         ]
     },
     {

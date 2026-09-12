@@ -28,7 +28,7 @@ export class UpdateUserRepository implements IUpdateUserRepository {
     userId: UserId,
     userName: UserName,
     userBirthday: UserBirthday
-  ): Promise<UserEntity | undefined> {
+  ): Promise<{ entity: UserEntity; darkMode: boolean } | undefined> {
     const now = new Date().toISOString();
     const [, updateResult] = await this.db.batch([
       this.db.update(userLoginMaster)
@@ -54,9 +54,10 @@ export class UpdateUserRepository implements IUpdateUserRepository {
         .returning(),
     ]);
 
-    if (!updateResult[0]) {
+    const row = updateResult[0];
+    if (!row) {
       return undefined;
     }
-    return new UserEntity(userId, userName, userBirthday);
+    return { entity: new UserEntity(userId, userName, userBirthday), darkMode: row.darkMode };
   }
 }

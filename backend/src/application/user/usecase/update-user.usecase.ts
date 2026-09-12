@@ -6,7 +6,7 @@ import type { IUpdateUserRepository, UserEntity } from "../../../domain/user";
 export type UpdateUserResult =
   | { status: "duplicate" }
   | { status: "not_found" }
-  | { status: "success"; entity: UserEntity; refreshToken: RefreshToken };
+  | { status: "success"; entity: UserEntity; darkMode: boolean; refreshToken: RefreshToken };
 
 /**
  * ユーザー更新ユースケース
@@ -27,13 +27,13 @@ export class UpdateUserUsecase {
       return { status: "duplicate" };
     }
 
-    const entity = await this.repository.updateUserWithLogin(userIdObj, userName, userBirthday);
-    if (!entity) {
+    const updateResult = await this.repository.updateUserWithLogin(userIdObj, userName, userBirthday);
+    if (!updateResult) {
       return { status: "not_found" };
     }
 
     const refreshToken = await RefreshToken.create(userIdObj, this.config);
 
-    return { status: "success", entity, refreshToken };
+    return { status: "success", entity: updateResult.entity, darkMode: updateResult.darkMode, refreshToken };
   }
 }

@@ -6,6 +6,7 @@ export type CreateUserResponseType = {
     id: string;
     name: string;
     birthday: string;
+    darkMode: boolean;
   };
 };
 
@@ -19,6 +20,8 @@ export class CreateUserResponseDto {
         id: entity.userId,
         name: entity.userName,
         birthday: entity.userBirthday,
+        // 新規作成直後はDBスキーマの既定値（false）と必ず一致する
+        darkMode: false,
       },
     };
   }

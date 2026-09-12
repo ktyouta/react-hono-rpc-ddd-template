@@ -17,5 +17,5 @@ export interface IUpdateUserRepository {
     userId: UserId,
     userName: UserName,
     userBirthday: UserBirthday
-  ): Promise<UserEntity | undefined>;
+  ): Promise<{ entity: UserEntity; darkMode: boolean } | undefined>;
 }

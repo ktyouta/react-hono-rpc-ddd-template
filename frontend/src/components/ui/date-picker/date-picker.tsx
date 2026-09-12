@@ -38,7 +38,7 @@ export function DatePicker({ value, onChange, disabled, placeholder, className }
             isClearable={!disabled}
             wrapperClassName="flex-1"
             className={cn(
-                "w-full border border-line rounded px-3 py-2 text-base",
+                "w-full border border-line rounded px-3 py-2 text-base bg-surface text-ink",
                 "focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent",
                 "disabled:bg-canvas disabled:cursor-not-allowed disabled:text-ink-sub",
                 className

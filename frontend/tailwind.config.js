@@ -1,4 +1,5 @@
 export default {
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx,mdx,stories.tsx}",
@@ -8,27 +9,29 @@ export default {
       colors: {
         // 汎用デザイントークン。UIコンポーネント側のハードコードされたTailwind標準色
         // （gray-500, blue-500 等）を意味のある名前に置き換えるためのもの。
-        // マルチテーマ切り替えは行わないため、CSS変数を介さず固定値で定義する。
-        canvas: "#F8FAFC",
-        surface: "#FFFFFF",
+        // 値自体はCSS変数（--xxx-rgb、index.css の :root / .dark で定義）を参照する。
+        // ライト/ダークの切替は <html class="dark"> の付け外しだけで反映される
+        // （rgb(var(--x) / <alpha-value>) にすることで bg-accent/50 のような透過度指定にも対応する）。
+        canvas: "rgb(var(--canvas-rgb) / <alpha-value>)",
+        surface: "rgb(var(--surface-rgb) / <alpha-value>)",
         accent: {
-          DEFAULT: "#2563EB",
-          hover: "#1D4ED8",
+          DEFAULT: "rgb(var(--accent-rgb) / <alpha-value>)",
+          hover: "rgb(var(--accent-hover-rgb) / <alpha-value>)",
         },
         ink: {
-          DEFAULT: "#1E293B",
-          sub: "#64748B",
+          DEFAULT: "rgb(var(--ink-rgb) / <alpha-value>)",
+          sub: "rgb(var(--ink-sub-rgb) / <alpha-value>)",
         },
-        line: "#E2E8F0",
-        danger: "#DC2626",
+        line: "rgb(var(--line-rgb) / <alpha-value>)",
+        danger: "rgb(var(--danger-rgb) / <alpha-value>)",
       },
       borderColor: {
         // 色指定のない `border` / `border-b` 等（Tailwindの既定では固定のgray-200相当）を
         // line トークンに揃える
-        DEFAULT: "#E2E8F0",
+        DEFAULT: "rgb(var(--line-rgb) / <alpha-value>)",
       },
       ringColor: {
-        DEFAULT: "#2563EB",
+        DEFAULT: "rgb(var(--accent-rgb) / <alpha-value>)",
       },
       keyframes: {
         "fade-in": {
