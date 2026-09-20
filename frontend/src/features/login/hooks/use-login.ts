@@ -1,6 +1,7 @@
 import { LoginUserContext, SetLoginUserContext } from '@/app/components/login-user-provider';
 import { paths } from '@/config/paths';
 import { useAppNavigation } from '@/hooks/use-app-navigation';
+import { useClearSessionCache } from '@/hooks/use-clear-session-cache';
 import { updateAccessToken } from '@/stores/access-token-store';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -21,6 +22,8 @@ export function useLogin() {
     const loginUser = LoginUserContext.useCtx();
     // ルーティング用
     const { appNavigate } = useAppNavigation();
+    // セッションキャッシュ除去
+    const { clearSessionCache } = useClearSessionCache();
     // リダイレクト先
     const [searchParams] = useSearchParams();
     const redirectTo = searchParams.get('redirectTo') || paths.home.path;
@@ -34,6 +37,8 @@ export function useLogin() {
             const data = res.data;
             setLoginUserInfo(data.user);
             updateAccessToken(data.accessToken);
+            // 前セッションのキャッシュ（他ユーザーのデータ・エラー）を除去
+            clearSessionCache();
             appNavigate(redirectTo);
         },
         // 失敗後の処理

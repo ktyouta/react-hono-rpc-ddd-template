@@ -5,7 +5,7 @@ description: |
   「認証済みユーザーが自分以外のリソースにアクセス・操作できる穴」を検出する。
 
   以下のような場合に必ず呼び出す：
-  - バックエンドの Controller / Service / Repository を新規作成・修正したとき
+  - バックエンドの Controller / Usecase / Repository を新規作成・修正したとき
 
   以下の場合は使用しない：
   - フロントエンドのみの変更

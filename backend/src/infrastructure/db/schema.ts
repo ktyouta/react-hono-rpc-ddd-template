@@ -37,7 +37,7 @@ export type NewUserMaster = typeof userMaster.$inferInsert;
  */
 export const userLoginMaster = sqliteTable("user_login_master", {
   id: text("id").primaryKey(), // ULID（ログインレコード自身のID）
-  userId: text("user_id").notNull(), // FK → user_master.id
+  userId: text("user_id").notNull().references(() => userMaster.id, { onDelete: "cascade" }), // FK → user_master.id
   loginId: text("login_id").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   salt: text("salt").notNull(),

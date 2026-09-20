@@ -18,6 +18,10 @@ export default defineConfig({
       registerType: 'autoUpdate',
       // main.tsx側で virtual:pwa-register を呼び出すため、自動登録スクリプトの注入は行わない
       injectRegister: null,
+      // API通信はキャッシュ対象に含めない（静的アセットのみプリキャッシュ）
+      workbox: {
+        navigateFallbackDenylist: [/^\/api\//],
+      },
       manifest: {
         name: 'React Hono RPC DDD Template',
         short_name: 'React Hono RPC DDD Template',

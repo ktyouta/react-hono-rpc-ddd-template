@@ -10,7 +10,7 @@ description: |
   以下の場合は使用しない：
   - 実装前の洗い出し（→ horizontal-scope を使う）
   - 調査・説明のみの場合
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Horizontal Gap Check Skill
@@ -36,7 +36,7 @@ version: 1.0.0
 （horizontal-scope と同じ観点で調査する）
 
 #### バックエンド観点
-- 同種のエンドポイントが存在する controller / service / repository
+- 同種のエンドポイントが存在する controller(presentation) / usecase(application) / repository(infrastructure) / entity・VO(domain)
 - router へのエンドポイント登録箇所
 - Drizzle スキーマ定義（DBスキーマ変更の場合）
 - バリデーションスキーマ（Zod）
@@ -54,6 +54,7 @@ version: 1.0.0
 - 型定義ファイル
 - 定数・設定ファイル
 - マイグレーションファイル（DBスキーマ変更の場合）
+- 原因調査で「導入時点から機能的に不要だった値・設定」と判明した場合、その値を追加した導入コミットを `git show <コミット> --stat` で確認し、同コミットで同時に変更された他ファイル（同じ値が同時に付与されている可能性がある）
 
 ---
 

@@ -36,6 +36,8 @@ version: 2.0.0
 
 ### Step 1: 設計分解
 
+新規テーブル・新規APIエンドポイントを伴うなど、データモデル・API契約の設計判断が必要な機能の場合は、feature-breakdown の前に design-architect を実行して基本設計案（複数案+推奨案）を確定させる。単純な機能追加で設計判断が不要な場合はスキップしてよい。
+
 feature-breakdown を実行し、機能をバックエンド・フロントエンドのタスクに分解する。
 
 ---
@@ -150,7 +152,7 @@ Step 3 の実装計画に沿ってバックエンドを実装する。
 
 ### Step 5: backend-review 実行
 
-backend-review を実行する。
+backend-review を実行する。あわせて resource-authz-review を実行する。
 
 ---
 
@@ -170,6 +172,9 @@ backend-review を実行する。
 - Repository メソッド: ...
 
 ### backend-review 結果
+- 問題なし / 違反あり（詳細）
+
+### resource-authz-review 結果
 - 問題なし / 違反あり（詳細）
 
 確認できたら実装を続けます。よろしいですか？
@@ -251,7 +256,7 @@ spec-review を実行する。
 
 ### Step 11: NG 対応
 
-Step 5・8・9 でいずれかの NG があった場合、NG を修正した後であっても skill-gap-detector を実行し、
+Step 5（backend-review / resource-authz-review）・8・9 でいずれかの NG があった場合、NG を修正した後であっても skill-gap-detector を実行し、
 既存 skill の検出漏れを特定して修正提案を行う。
 
 NG がゼロ件だった場合はスキップしてよい。
@@ -273,5 +278,6 @@ NG がゼロ件だった場合はスキップしてよい。
 - Step 10 の plan.md 更新は spec-review 通過後に行う（NG 残存状態で `[x]` にしない）
 - エラーや NG を無視して次のステップに進まない
 - 指示にない機能を実装に追加しない
+- ユーザーが明示的に承認していない前提・技術方針を「合意済み」として plan.md や後続スキルへの指示に記載しない。対象範囲・要件が変更された場合、変更前の前提は再検証してから引き継ぐ
 - schema.ts を変更した場合は必ず `db:generate` を実行する。`drizzle/*.sql` を手動作成しない
 - コーディング規約・チェック項目の追加は skill ファイルにのみ行う。skill で対応できる内容を CLAUDE.md に追記しない

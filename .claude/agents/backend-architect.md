@@ -42,7 +42,6 @@ backend/src/
 ├── constant/     # 定数（エンドポイント名・HTTPステータス）
 ├── middleware/   # Hono ミドルウェア
 ├── rpc/          # RPC エンドポイント集約
-├── schema/       # 複数機能で共有する Zod パラメータスキーマ
 ├── types/        # 型定義
 └── util/         # ユーティリティ
 ```

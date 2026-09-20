@@ -81,7 +81,7 @@ export function Login(props: PropsType) {
                             アカウント作成はこちらから
                         </span>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                    <div className="flex flex-row gap-3 mt-4">
                         <button
                             type="button"
                             className="flex-1 bg-accent hover:bg-accent-hover text-white font-medium py-3 px-4 rounded-lg transition-colors"

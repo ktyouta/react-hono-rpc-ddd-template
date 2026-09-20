@@ -1,4 +1,3 @@
-import { UserIdParamSchema } from "../../../schema";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { setCookie } from "hono/cookie";
@@ -13,28 +12,26 @@ import { UpdateUserResponseDto } from "../dto";
 import { UpdateUserSchema } from "../schema";
 
 const updateUser = new Hono<AppEnv>().patch(
-    `${API_ENDPOINT.USER_ID}`,
+    API_ENDPOINT.USER,
     userOperationGuardMiddleware,
     authMiddleware,
-    zValidator("param", UserIdParamSchema, (result, c) => {
-        if (!result.success) {
-            return c.json({ message: "パラメータが不正です。", data: formatZodErrors(result.error) }, HTTP_STATUS.BAD_REQUEST);
-        }
-    }),
     zValidator("json", UpdateUserSchema, (result, c) => {
         if (!result.success) {
             return c.json({ message: "バリデーションエラー", data: formatZodErrors(result.error) }, HTTP_STATUS.UNPROCESSABLE_ENTITY);
         }
     }),
     async (c) => {
-        const { userId } = c.req.valid("param");
+        const user = c.get("user");
+        if (!user) {
+            return c.json({ message: "認証エラー" }, HTTP_STATUS.UNAUTHORIZED);
+        }
         const body = c.req.valid("json");
         const db = c.get('db');
         const config = c.get('envConfig');
         const repository = new UpdateUserRepository(db);
         const usecase = new UpdateUserUsecase(repository, config);
 
-        const result = await usecase.execute(userId, body.name, body.birthday);
+        const result = await usecase.execute(user.userId.value, body.name, body.birthday);
 
         if (result.status === "duplicate") {
             return c.json({ message: "既にユーザーが存在しています。" }, HTTP_STATUS.UNPROCESSABLE_ENTITY);

@@ -13,6 +13,7 @@ type Props = {
     side?: Side;
     closeOnOverlayClick?: boolean;
     closeOnEscape?: boolean;
+    widthClassName?: string;
 };
 
 const sideClasses: Record<Side, string> = {
@@ -31,6 +32,7 @@ export function Drawer({
     side = "right",
     closeOnOverlayClick = true,
     closeOnEscape = true,
+    widthClassName,
 }: Props) {
     const handleKeyDown = useCallback(
         (event: KeyboardEvent) => {
@@ -42,10 +44,12 @@ export function Drawer({
     );
 
     useEffect(() => {
-        if (isOpen) {
-            document.addEventListener("keydown", handleKeyDown);
-            document.body.style.overflow = "hidden";
+        if (!isOpen) {
+            return;
         }
+
+        document.addEventListener("keydown", handleKeyDown);
+        document.body.style.overflow = "hidden";
 
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
@@ -86,7 +90,8 @@ export function Drawer({
             <div
                 className={cn(
                     "fixed z-10 bg-surface shadow-xl p-6",
-                    sideClasses[side]
+                    sideClasses[side],
+                    widthClassName
                 )}
                 onClick={handleContentClick}
             >

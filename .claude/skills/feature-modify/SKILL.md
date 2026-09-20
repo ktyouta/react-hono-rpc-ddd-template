@@ -151,11 +151,13 @@ Step 4 の差分設計に沿ってバックエンドを変更する。
 
 ### Step 6: backend-review 実行
 
-backend-review を実行する。
+backend-review を実行する。あわせて resource-authz-review を実行する。
 
 ---
 
 ### Step 7: ユーザー確認（バックエンド）
+
+**Step 8（フロントエンド実装）に進む前に必ず実施する。** DBマイグレーション適用（`db:generate`/`db:migrate:local`）の実行可否確認など、Step 5 の実装作業に付随する別の確認とは別物であり、それらの確認に紛れて省略してはならない。
 
 以下の形式で出力し、ユーザーの確認を得る。
 
@@ -167,10 +169,13 @@ backend-review を実行する。
 
 ### 実装内容サマリー
 - エンドポイント: ...
-- Service メソッド: ...
+- Usecase メソッド: ...
 - Repository メソッド: ...
 
 ### backend-review 結果
+- 問題なし / 違反あり（詳細）
+
+### resource-authz-review 結果
 - 問題なし / 違反あり（詳細）
 
 確認できたら実装を続けます。よろしいですか？
@@ -224,7 +229,7 @@ Step 4 の差分設計に沿ってフロントエンドを変更する。
 
 ### Step 11: NG 対応
 
-Step 6・9・10 でいずれかの NG があった場合、skill-gap-detector を実行し、
+Step 6（backend-review / resource-authz-review）・9・10 でいずれかの NG があった場合、skill-gap-detector を実行し、
 既存 skill の漏れを特定して修正提案を行う。
 
 ---
@@ -239,7 +244,7 @@ Step 6・9・10 でいずれかの NG があった場合、skill-gap-detector �
 
 - 各 Step は順番通りに実行する（並行実行しない）
 - Step 3（horizontal-scope）は省略しない。Step 4 の差分設計に「horizontal-scope 実行結果」欄を必ず含める（対応不要と判断した場合もその旨を明記する。無言でスキップしない）
-- ユーザー確認（Step 4・7）では必ずユーザーの明示的な OK を得てから次に進む
+- ユーザー確認（Step 4・7）では必ずユーザーの明示的な OK を得てから次に進む。Step 7 はマイグレーション適用可否など他の確認作業と混同して省略しない
 - 既存テストが存在する場合は、変更後も通過するか確認する
 - 指示にない機能を変更に追加しない
 - エラーや NG を無視して次のステップに進まない

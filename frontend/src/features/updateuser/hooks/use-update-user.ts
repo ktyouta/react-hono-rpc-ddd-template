@@ -30,7 +30,7 @@ export function useUpdateUser() {
     // 年リスト
     const yearCoomboList = useCreateYearList();
     // フォーム
-    const { register, handleSubmit, formState: { errors }, watch } = useUpdateUserForm();
+    const { register, handleSubmit, formState: { errors }, watch } = useUpdateUserForm(loginUser);
     // ルーティング用
     const { appGoBack } = useAppNavigation();
     // 更新リクエスト
@@ -61,7 +61,6 @@ export function useUpdateUser() {
 
         // 更新リクエスト呼び出し
         postMutation.mutate({
-            userId: String(loginUser.id),
             json: {
                 name: data.name,
                 birthday: formatBirthday(data.birthday),

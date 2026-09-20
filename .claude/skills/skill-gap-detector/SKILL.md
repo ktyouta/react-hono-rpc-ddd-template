@@ -5,7 +5,7 @@ description: |
   既存 skill のチェック項目の漏れを特定し、修正案を提案する。
 
   以下のような場合に使用する：
-  - backend-review / frontend-review / architecture-review / rpc-review / db-naming-review / spec-review でNG が出たとき（feature-impl 経由・手動実行どちらも対象）
+  - backend-review / resource-authz-review / frontend-review / architecture-review / rpc-review / db-naming-review / spec-review でNG が出たとき（feature-impl 経由・手動実行どちらも対象）
   - feature-impl の Step 11 として自動実行されるとき
   - ユーザーから「仕様と違う」「想定の実装になっていない」「ファイル・メソッドの分け方がおかしい」などの指摘があったとき
 

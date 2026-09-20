@@ -51,8 +51,6 @@ export function DashboardContainer() {
         );
     }
 
-    const userId = loginUser.id;
-
     /**
      * ユーザー情報更新画面遷移
      */
@@ -92,7 +90,7 @@ export function DashboardContainer() {
         setTheme(nextDarkMode ? 'dark' : 'light');
 
         updateDarkModeMutation.mutate(
-            { userId, json: { darkMode: nextDarkMode } },
+            { json: { darkMode: nextDarkMode } },
             {
                 onSuccess: () => {
                     setLoginUser((prev) => (prev ? { ...prev, darkMode: nextDarkMode } : prev));

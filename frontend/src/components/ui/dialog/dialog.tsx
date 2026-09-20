@@ -12,6 +12,7 @@ type Props = {
     size?: Size;
     closeOnOverlayClick?: boolean;
     closeOnEscape?: boolean;
+    contentClassName?: string;
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -28,6 +29,7 @@ export function Dialog({
     size = "medium",
     closeOnOverlayClick = true,
     closeOnEscape = true,
+    contentClassName,
 }: Props) {
     const handleKeyDown = useCallback(
         (event: KeyboardEvent) => {
@@ -84,7 +86,8 @@ export function Dialog({
             <div
                 className={cn(
                     "relative z-10 w-full mx-4 bg-surface rounded-lg shadow-xl",
-                    sizeClasses[size]
+                    sizeClasses[size],
+                    contentClassName
                 )}
                 onClick={handleContentClick}
             >
