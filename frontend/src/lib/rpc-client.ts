@@ -15,6 +15,18 @@ function createConnectionErrorResponse(): Response {
 }
 
 /**
+ * fetch を実行し、通信エラー時は疑似エラーレスポンスを返す
+ */
+async function fetchOrConnectionError(input: RequestInfo | URL, init: RequestInit): Promise<Response> {
+  try {
+    return await fetch(input, init);
+  } catch {
+    // 通信エラー（サーバーダウン・オフライン等）
+    return createConnectionErrorResponse();
+  }
+}
+
+/**
  * 401時にリフレッシュ・リトライを行うカスタムfetch
  */
 async function fetchWithRefresh(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
@@ -26,29 +38,23 @@ async function fetchWithRefresh(input: RequestInfo | URL, init?: RequestInit): P
     headers.set('Authorization', `Bearer ${accessToken}`);
   }
 
-  let response: Response;
-  try {
-    response = await fetch(input, { ...init, headers });
-  } catch {
-    // 通信エラー（サーバーダウン・オフライン等）
-    return createConnectionErrorResponse();
-  }
+  const response = await fetchOrConnectionError(input, { ...init, headers });
 
   if (response.status !== 401) {
     return response;
   }
 
   // 401: リフレッシュ後にリトライ
+  let newAccessToken: string;
   try {
-    const newAccessToken = await handleRefresh();
-
-    headers.set('Authorization', `Bearer ${newAccessToken}`);
-
-    return fetch(input, { ...init, headers });
+    newAccessToken = await handleRefresh();
   } catch {
     // リフレッシュ失敗時は元の401レスポンスを返す
     return response;
   }
+
+  headers.set('Authorization', `Bearer ${newAccessToken}`);
+  return fetchOrConnectionError(input, { ...init, headers });
 }
 
 /**

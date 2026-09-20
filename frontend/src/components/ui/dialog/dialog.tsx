@@ -1,6 +1,6 @@
-import { type ReactNode, useEffect, useCallback } from "react";
-import { createPortal } from "react-dom";
 import { cn } from "@/utils/cn";
+import { type ReactNode, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 type Size = "small" | "medium" | "large";
 
@@ -39,10 +39,12 @@ export function Dialog({
     );
 
     useEffect(() => {
-        if (isOpen) {
-            document.addEventListener("keydown", handleKeyDown);
-            document.body.style.overflow = "hidden";
+        if (!isOpen) {
+            return;
         }
+
+        document.addEventListener("keydown", handleKeyDown);
+        document.body.style.overflow = "hidden";
 
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
