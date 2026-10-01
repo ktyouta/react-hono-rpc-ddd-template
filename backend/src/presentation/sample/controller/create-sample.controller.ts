@@ -5,7 +5,6 @@ import { API_ENDPOINT, HTTP_STATUS } from "../../../constant";
 import { CreateSampleRepository } from "../../../infrastructure";
 import type { AppEnv } from "../../../types";
 import { formatZodErrors } from "../../../util";
-import { CreateSampleResponseDto } from "../dto";
 import { CreateSampleSchema } from "../schema";
 
 /**
@@ -25,10 +24,9 @@ const createSample = new Hono<AppEnv>().post(
     const repository = new CreateSampleRepository(db);
     const usecase = new CreateSampleUsecase(repository);
 
-    const entity = await usecase.execute(body.name, body.description);
-    const responseDto = new CreateSampleResponseDto(entity);
+    const result = await usecase.execute(body.name, body.description);
 
-    return c.json({ message: "サンプルを作成しました。", data: responseDto.value }, HTTP_STATUS.CREATED);
+    return c.json({ message: "サンプルを作成しました。", data: result.value }, HTTP_STATUS.CREATED);
   }
 );
 

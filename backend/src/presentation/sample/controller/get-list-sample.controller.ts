@@ -3,7 +3,6 @@ import { GetListSampleUsecase } from "../../../application";
 import { API_ENDPOINT, HTTP_STATUS } from "../../../constant";
 import { GetListSampleRepository } from "../../../infrastructure";
 import type { AppEnv } from "../../../types";
-import { GetListSampleResponseDto } from "../dto";
 
 /**
  * サンプル一覧取得
@@ -14,10 +13,9 @@ const getListSample = new Hono<AppEnv>().get(API_ENDPOINT.SAMPLE, async (c) => {
   const repository = new GetListSampleRepository(db);
   const usecase = new GetListSampleUsecase(repository);
 
-  const entities = await usecase.execute();
-  const responseDto = new GetListSampleResponseDto(entities);
+  const result = await usecase.execute();
 
-  return c.json({ message: "サンプル一覧を取得しました。", data: responseDto.value }, HTTP_STATUS.OK);
+  return c.json({ message: "サンプル一覧を取得しました。", data: result.value }, HTTP_STATUS.OK);
 });
 
 export { getListSample };

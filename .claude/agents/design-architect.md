@@ -27,9 +27,9 @@ tools: Read, Glob, Grep
 ```
 backend/src/
 ├── domain/          # 既存 Entity・Value Object・Repository interface（DDD 4層のドメイン層）
-├── application/     # 既存 Usecase
+├── application/     # 既存 Usecase・Result DTO
 ├── infrastructure/  # 既存 Repository 実装・DBスキーマ・テーブル設計
-├── presentation/    # 既存 Controller・DTO・Zodスキーマ・APIエンドポイント・ルーター
+├── presentation/    # 既存 Controller・Zodスキーマ・APIエンドポイント・ルーター
 └── rpc/             # 既存RPCルーター集約
 
 frontend/src/

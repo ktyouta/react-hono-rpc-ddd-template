@@ -1,4 +1,5 @@
-import type { GetListSampleEntity, IGetListSampleRepository } from "../../../domain/sample";
+import type { IGetListSampleRepository } from "../../../domain/sample";
+import { GetListSampleResultDto } from "../dto";
 
 /**
  * サンプル一覧取得ユースケース
@@ -9,7 +10,8 @@ export class GetListSampleUsecase {
   /**
    * 全件取得
    */
-  async execute(): Promise<GetListSampleEntity[]> {
-    return await this.repository.findAll();
+  async execute(): Promise<GetListSampleResultDto> {
+    const entities = await this.repository.findAll();
+    return new GetListSampleResultDto(entities);
   }
 }

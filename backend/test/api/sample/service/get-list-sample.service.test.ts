@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GetListSampleEntity } from "../../../../src/domain/sample";
-import { GetListSampleUsecase } from "../../../../src/application/sample";
+import { GetListSampleResultDto, GetListSampleUsecase } from "../../../../src/application/sample";
 import type { IGetListSampleRepository } from "../../../../src/domain/sample";
 
 describe("GetListSampleUsecase (get-list)", () => {
@@ -27,7 +27,8 @@ describe("GetListSampleUsecase (get-list)", () => {
 
     const result = await usecase.execute();
 
-    expect(result).toHaveLength(1);
-    expect(result[0]).toBeInstanceOf(GetListSampleEntity);
+    expect(result).toBeInstanceOf(GetListSampleResultDto);
+    expect(result.value).toHaveLength(1);
+    expect(result.value[0].id).toBe(1);
   });
 });

@@ -24,7 +24,7 @@ backend/src/
 │   ├── user/          #   プロフィール管理
 │   ├── auth/          #   認証（login/logout/password/token/credential）
 │   └── sample/
-├── application/        # Usecase（メインロジック。Repository interface経由でdomainを操作）
+├── application/        # Usecase・Result DTO（メインロジック。Repository interface経由でdomainを操作）
 │   ├── user/usecase/
 │   ├── auth/usecase/
 │   └── sample/usecase/
@@ -33,7 +33,7 @@ backend/src/
 │   ├── user/repository/
 │   ├── auth/repository/
 │   └── sample/repository/
-├── presentation/        # Controller・DTO・Zodスキーマ（HTTP入出力のみ）
+├── presentation/        # Controller・Zodスキーマ（HTTP入出力のみ）
 │   ├── user/
 │   ├── auth/
 │   ├── health/
@@ -80,7 +80,7 @@ backend/src/
 ## チェックリスト
 
 ### フォルダ・ファイル配置
-- 新しい機能が `domain/<機能名>/`・`application/<機能名>/usecase/`・`infrastructure/<機能名>/repository/`・`presentation/<機能名>/` の4層に正しく配置されているか
+- 新しい機能が `domain/<機能名>/`・`application/<機能名>/`（usecase, dto）・`infrastructure/<機能名>/repository/`・`presentation/<機能名>/` の4層に正しく配置されているか
 - Entity・Value Object・Repository interface が `domain/` に集約されているか
 - Repository実装（DB アクセス）が `infrastructure/` に分離されているか
 - 共通ロジックが適切なレイヤーに配置されているか

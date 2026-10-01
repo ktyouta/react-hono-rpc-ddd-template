@@ -26,12 +26,12 @@
 - `backend/src/application/category/usecase/get-categories.usecase.ts`
 - `backend/src/application/category/usecase/create-category.usecase.ts`
 - `backend/src/application/category/usecase/index.ts`
+- `backend/src/application/category/dto/get-categories-result.dto.ts`
+- `backend/src/application/category/dto/create-category-result.dto.ts`
+- `backend/src/application/category/dto/index.ts`
 - `backend/src/application/category/index.ts`
 - `backend/src/presentation/category/schema/create-category.schema.ts` — Zod バリデーション
 - `backend/src/presentation/category/schema/index.ts`
-- `backend/src/presentation/category/dto/get-categories-response.dto.ts`
-- `backend/src/presentation/category/dto/create-category-response.dto.ts`
-- `backend/src/presentation/category/dto/index.ts`
 - `backend/src/presentation/category/controller/get-categories.controller.ts`
 - `backend/src/presentation/category/controller/create-category.controller.ts`
 - `backend/src/presentation/category/controller/category.controller.ts` — ルーター結合

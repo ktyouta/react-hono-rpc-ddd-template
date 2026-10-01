@@ -1,4 +1,5 @@
-import type { UpdateSampleEntity, IUpdateSampleRepository } from "../../../domain/sample";
+import type { IUpdateSampleRepository } from "../../../domain/sample";
+import { UpdateSampleResultDto } from "../dto";
 
 /**
  * サンプル更新ユースケース
@@ -16,7 +17,7 @@ export class UpdateSampleUsecase {
     id: number,
     name?: string,
     description?: string
-  ): Promise<UpdateSampleEntity | null> {
+  ): Promise<UpdateSampleResultDto | null> {
     const updateData: { name?: string; description?: string } = {};
     if (name !== undefined) {
       updateData.name = name;
@@ -26,6 +27,9 @@ export class UpdateSampleUsecase {
     }
 
     const entity = await this.repository.update(id, updateData);
-    return entity ?? null;
+    if (!entity) {
+      return null;
+    }
+    return new UpdateSampleResultDto(entity);
   }
 }

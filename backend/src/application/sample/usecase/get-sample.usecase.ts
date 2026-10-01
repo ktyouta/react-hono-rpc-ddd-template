@@ -1,4 +1,5 @@
-import type { GetSampleEntity, IGetSampleRepository } from "../../../domain/sample";
+import type { IGetSampleRepository } from "../../../domain/sample";
+import { GetSampleResultDto } from "../dto";
 
 /**
  * サンプル取得ユースケース
@@ -10,8 +11,11 @@ export class GetSampleUsecase {
    * ID指定で取得
    * @param id サンプルID
    */
-  async execute(id: number): Promise<GetSampleEntity | null> {
+  async execute(id: number): Promise<GetSampleResultDto | null> {
     const entity = await this.repository.findById(id);
-    return entity ?? null;
+    if (!entity) {
+      return null;
+    }
+    return new GetSampleResultDto(entity);
   }
 }

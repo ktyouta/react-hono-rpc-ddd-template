@@ -1,9 +1,9 @@
 import { UpdateSampleEntity } from "../../../domain/sample";
 
 /**
- * サンプルレスポンスの型
+ * サンプル結果の型
  */
-export type UpdateSampleResponseType = {
+export type UpdateSampleResultType = {
   id: number;
   name: string;
   description: string | null;
@@ -12,11 +12,14 @@ export type UpdateSampleResponseType = {
 };
 
 /**
- * サンプル更新レスポンスDTO
+ * サンプル更新結果 DTO
  */
-export class UpdateSampleResponseDto {
-  private readonly _value: UpdateSampleResponseType;
+export class UpdateSampleResultDto {
+  private readonly _value: UpdateSampleResultType;
 
+  /**
+   * @param entity 更新後のサンプルエンティティ
+   */
   constructor(entity: UpdateSampleEntity) {
     this._value = {
       id: entity.id,
@@ -27,7 +30,7 @@ export class UpdateSampleResponseDto {
     };
   }
 
-  get value(): UpdateSampleResponseType {
+  get value(): UpdateSampleResultType {
     return this._value;
   }
 }

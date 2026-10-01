@@ -5,7 +5,6 @@ import { API_ENDPOINT, HTTP_STATUS } from "../../../constant";
 import { GetSampleRepository } from "../../../infrastructure";
 import type { AppEnv } from "../../../types";
 import { formatZodErrors } from "../../../util";
-import { GetSampleResponseDto } from "../dto";
 import { GetSampleParamSchema } from "../schema";
 
 /**
@@ -25,15 +24,13 @@ const getSampleById = new Hono<AppEnv>().get(
     const repository = new GetSampleRepository(db);
     const usecase = new GetSampleUsecase(repository);
 
-    const entity = await usecase.execute(Number(id));
+    const result = await usecase.execute(Number(id));
 
-    if (!entity) {
+    if (!result) {
       return c.json({ message: "サンプルが見つかりません。" }, HTTP_STATUS.NOT_FOUND);
     }
 
-    const responseDto = new GetSampleResponseDto(entity);
-
-    return c.json({ message: "サンプルを取得しました。", data: responseDto.value }, HTTP_STATUS.OK);
+    return c.json({ message: "サンプルを取得しました。", data: result.value }, HTTP_STATUS.OK);
   }
 );
 

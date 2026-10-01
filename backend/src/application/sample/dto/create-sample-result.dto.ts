@@ -1,9 +1,9 @@
 import { CreateSampleEntity } from "../../../domain/sample";
 
 /**
- * サンプルレスポンスの型
+ * サンプル結果の型
  */
-export type CreateSampleResponseType = {
+export type CreateSampleResultType = {
   id: number;
   name: string;
   description: string | null;
@@ -12,11 +12,14 @@ export type CreateSampleResponseType = {
 };
 
 /**
- * サンプル作成レスポンスDTO
+ * サンプル作成結果 DTO
  */
-export class CreateSampleResponseDto {
-  private readonly _value: CreateSampleResponseType;
+export class CreateSampleResultDto {
+  private readonly _value: CreateSampleResultType;
 
+  /**
+   * @param entity 作成したサンプルエンティティ
+   */
   constructor(entity: CreateSampleEntity) {
     this._value = {
       id: entity.id,
@@ -27,7 +30,7 @@ export class CreateSampleResponseDto {
     };
   }
 
-  get value(): CreateSampleResponseType {
+  get value(): CreateSampleResultType {
     return this._value;
   }
 }

@@ -32,7 +32,7 @@ react-hono-rpc-ddd-template/
 │   │   │   ├── user/         #   プロフィール管理
 │   │   │   ├── auth/         #   認証（login/logout/password/token/credential）
 │   │   │   └── sample/
-│   │   ├── application/      # Usecase（メインロジック。Repository interface 経由で domain を操作）
+│   │   ├── application/      # Usecase・Result DTO（メインロジック。Repository interface 経由で domain を操作）
 │   │   │   ├── user/usecase/
 │   │   │   ├── auth/usecase/
 │   │   │   └── sample/usecase/
@@ -41,7 +41,7 @@ react-hono-rpc-ddd-template/
 │   │   │   ├── user/repository/
 │   │   │   ├── auth/repository/
 │   │   │   └── sample/repository/
-│   │   ├── presentation/     # Controller・DTO・Zod スキーマ（HTTP 入出力のみ）
+│   │   ├── presentation/     # Controller・Zod スキーマ（HTTP 入出力のみ）
 │   │   │   ├── user/
 │   │   │   ├── auth/
 │   │   │   ├── health/

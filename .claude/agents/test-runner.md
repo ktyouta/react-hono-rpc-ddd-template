@@ -19,19 +19,19 @@ tools: Bash, Read, Grep, Glob
 ## 許可されたコマンド
 
 ```bash
-# ルートから両方実行
-npm run test
-
 # フロントエンドのみ
-npm run test --prefix frontend
+cd frontend && npx vitest run
 
 # バックエンドのみ
-npm run test --prefix backend
+cd backend && npx vitest run
 ```
+
+- 両方実行する場合は、フロントエンド → バックエンドの順に上記を個別に実行する
+- `npm run test`（ルート・各ディレクトリとも）は使わない（`vitest` のウォッチモードで終了しないため）
 
 ## 実行ワークフロー
 
-1. 指定されたスコープ（全体・フロント・バック）のテストを実行する
+1. 指定されたスコープ（全体・フロント・バック）のテストを、許可されたコマンドで実行する
 2. 出力結果を解析する
 3. 失敗があれば該当ファイルを読んで原因を特定する
 4. レポートを返す

@@ -33,7 +33,7 @@ version: 2.1.0
 
 ### Controller 単一責務（Presentation層）
 - Controller 内にビジネスロジック・VO生成・DBアクセスが直書きされていないか
-- Controller は Zodバリデーション・Usecase呼び出し・DTO変換・ステータスコード決定のみを行っているか
+- Controller は Zodバリデーション・Usecase呼び出し・Result DTO の値のレスポンス/Cookie への振り分け・ステータスコード決定のみを行っているか
 - Controller が Repository・Drizzle・domain の Entity/VO 生成ロジックに直接触れていないか（触れる場合は Usecase への漏れとして指摘する）
 - 処理の流れが上から順に読めるか（コメントや命名で各ステップの概要が把握できるか）
 - Usecase 呼び出しの順序でエンドポイントの処理概要が理解できるか
@@ -53,7 +53,7 @@ version: 2.1.0
 - **モジュール跨ぎの依存は許可される**: Usecase が自モジュール以外の `domain/{他モジュール}/repository` interface に依存すること自体は違反ではない（例: `application/user/usecase/create-user.usecase.ts` が `domain/auth` の `IUserLoginRepository` に依存する）。ただし domain 層の Entity/VO 同士が直接依存するのは違反として指摘する
 
 ### フォルダ・ファイル構成
-- `domain/{機能グループ名}/`（entity, value-object, repository interface）、`application/{機能グループ名}/usecase/`、`infrastructure/{機能グループ名}/repository/`、`presentation/{機能グループ名}/`（controller, dto, schema）の4層構成に沿っているか
+- `domain/{機能グループ名}/`（entity, value-object, repository interface）、`application/{機能グループ名}/`（usecase, dto）、`infrastructure/{機能グループ名}/repository/`、`presentation/{機能グループ名}/`（controller, schema）の4層構成に沿っているか
 - 各レイヤーのファイルが `[操作名].[レイヤー].ts` の命名でエンドポイント単位に分割されているか
 - ルーター集約ファイルが `[機能グループ名].controller.ts` になっているか
 - repository に対応する `.repository.interface.ts` が `domain/` 側にセットで存在するか

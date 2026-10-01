@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GetSampleEntity } from "../../../../src/domain/sample";
-import { GetSampleUsecase } from "../../../../src/application/sample";
+import { GetSampleResultDto, GetSampleUsecase } from "../../../../src/application/sample";
 import type { IGetSampleRepository } from "../../../../src/domain/sample";
 
 describe("GetSampleUsecase (get)", () => {
@@ -27,8 +27,8 @@ describe("GetSampleUsecase (get)", () => {
 
     const result = await usecase.execute(1);
 
-    expect(result).toBeInstanceOf(GetSampleEntity);
-    expect(result?.id).toBe(1);
+    expect(result).toBeInstanceOf(GetSampleResultDto);
+    expect(result?.value.id).toBe(1);
   });
 
   it("findById - 存在しない場合にnullを返すこと", async () => {

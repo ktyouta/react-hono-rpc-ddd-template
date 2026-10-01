@@ -1,9 +1,9 @@
 import { GetListSampleEntity } from "../../../domain/sample";
 
 /**
- * サンプルレスポンスの型
+ * サンプル結果の型
  */
-export type GetListSampleResponseType = {
+export type GetListSampleResultType = {
   id: number;
   name: string;
   description: string | null;
@@ -12,11 +12,14 @@ export type GetListSampleResponseType = {
 };
 
 /**
- * サンプル一覧レスポンスDTO
+ * サンプル一覧結果 DTO
  */
-export class GetListSampleResponseDto {
-  private readonly _value: GetListSampleResponseType[];
+export class GetListSampleResultDto {
+  private readonly _value: GetListSampleResultType[];
 
+  /**
+   * @param entities 取得したサンプルエンティティ一覧
+   */
   constructor(entities: GetListSampleEntity[]) {
     this._value = entities.map((entity) => ({
       id: entity.id,
@@ -27,7 +30,7 @@ export class GetListSampleResponseDto {
     }));
   }
 
-  get value(): GetListSampleResponseType[] {
+  get value(): GetListSampleResultType[] {
     return this._value;
   }
 }
