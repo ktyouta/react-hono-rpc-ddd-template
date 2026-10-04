@@ -84,12 +84,14 @@ Step 1 の目的に沿って内部構造を改善する。
 
 ---
 
-### Step 6: 型チェック
+### Step 6: 型チェック・lint
 
-テスト通過後、以下を実行してエラーがないことを確認する。
+テスト通過後、ルートで以下を実行してエラーが 0 件であることを確認する（変更範囲が backend だけでも両方実行する。frontend の型チェックはバックエンドの型定義を参照するため）。
 
-- backend を変更した場合: `cd backend && npx tsc --noEmit -p .`
-- frontend を変更した場合、またはバックエンドの RPC 型・レスポンス型・import パスを変更した場合: `npm run typecheck --prefix frontend`（`tsconfig.app.json` を直接指定しない）
+- `npm run typecheck`（backend の tsc と、frontend の `tsc -b`。`tsc -b` はバックエンドの型定義 `backend/dist-types` を生成してから frontend の各 tsconfig をチェックする）
+- `npm run lint`
+
+`npx tsc --noEmit` を frontend で直接実行しない（`frontend/tsconfig.json` は references のみで、チェック対象を持たない）。
 
 ---
 
@@ -115,7 +117,7 @@ Step 1 の目的に沿って内部構造を改善する。
 ## Constraints
 
 - 新規ファイルを作成する場合は Step 2 でファイル名・責務・export するものを提示し、ユーザーの承認を得てから実装に進む
-- Step 3・5 のテスト確認、Step 6 の型チェックは必ず実施する。省略しない。
+- Step 3・5 のテスト確認、Step 6 の型チェック・lint は必ず実施する。省略しない。
 - テストコマンドは `npx vitest run` を使う（`npm run test` は使わない）
 - 既存テストの修正は型・名前・パスへの追従のみ。期待値は変更しない
 - リファクタリング中に仕様変更・バグ修正を混入させない

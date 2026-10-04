@@ -15,19 +15,19 @@
 
 | # | タスク | ファイル | 前提 |
 |---|--------|----------|------|
-| 1 | categories テーブル定義追加 | `backend/src/infrastructure/db/schema.ts` | ― |
+| 1 | categories テーブル定義追加 | `backend/src/infrastructure/db/schema/schema.ts` | ― |
 | 2 | マイグレーション生成 | `backend/drizzle/` | #1 |
-| 3 | Category Entity 定義 | `backend/src/domain/category/entity/category.entity.ts` | ― |
-| 4 | Repository interface 定義 | `backend/src/domain/category/repository/get-categories.repository.interface.ts` `backend/src/domain/category/repository/create-category.repository.interface.ts` | #3 |
-| 5 | GetCategoriesRepository 実装 | `backend/src/infrastructure/category/repository/get-categories.repository.ts` | #1, #4 |
-| 6 | CreateCategoryRepository 実装 | `backend/src/infrastructure/category/repository/create-category.repository.ts` | #1, #4 |
-| 7 | CreateCategorySchema 定義（Zod） | `backend/src/presentation/category/schema/create-category.schema.ts` | ― |
-| 8 | Result DTO 定義（一覧・作成） | `backend/src/application/category/dto/get-categories-result.dto.ts` `backend/src/application/category/dto/create-category-result.dto.ts` | #3 |
-| 9 | GetCategoriesUsecase 実装 | `backend/src/application/category/usecase/get-categories.usecase.ts` | #5, #8 |
-| 10 | CreateCategoryUsecase 実装 | `backend/src/application/category/usecase/create-category.usecase.ts` | #6, #7, #8 |
-| 11 | GetCategoriesController 実装 | `backend/src/presentation/category/controller/get-categories.controller.ts` | #9 |
-| 12 | CreateCategoryController 実装 | `backend/src/presentation/category/controller/create-category.controller.ts` | #10, #7 |
-| 13 | CategoryController（ルーター結合） | `backend/src/presentation/category/controller/category.controller.ts` | #11, #12 |
+| 3 | Category Entity 定義 | `backend/src/domain/category/entity/category/category.entity.ts` | ― |
+| 4 | Repository interface 定義 | `backend/src/domain/category/repository/get-categories/get-categories.repository.interface.ts` `backend/src/domain/category/repository/create-category/create-category.repository.interface.ts` | #3 |
+| 5 | GetCategoriesRepository 実装 | `backend/src/infrastructure/category/repository/get-categories/get-categories.repository.ts` | #1, #4 |
+| 6 | CreateCategoryRepository 実装 | `backend/src/infrastructure/category/repository/create-category/create-category.repository.ts` | #1, #4 |
+| 7 | CreateCategorySchema 定義（Zod） | `backend/src/presentation/category/schema/create-category/create-category.schema.ts` | ― |
+| 8 | Result DTO 定義（一覧・作成） | `backend/src/application/category/dto/get-categories-result/get-categories-result.dto.ts` `backend/src/application/category/dto/create-category-result/create-category-result.dto.ts` | #3 |
+| 9 | GetCategoriesUsecase 実装 | `backend/src/application/category/usecase/get-categories/get-categories.usecase.ts` | #5, #8 |
+| 10 | CreateCategoryUsecase 実装 | `backend/src/application/category/usecase/create-category/create-category.usecase.ts` | #6, #7, #8 |
+| 11 | GetCategoriesController 実装 | `backend/src/presentation/category/controller/get-categories/get-categories.controller.ts` | #9 |
+| 12 | CreateCategoryController 実装 | `backend/src/presentation/category/controller/create-category/create-category.controller.ts` | #10, #7 |
+| 13 | CategoryController（ルーター結合） | `backend/src/presentation/category/controller/category/category.controller.ts` | #11, #12 |
 | 14 | index.ts へのルート登録 | `backend/src/index.ts` | #13 |
 
 ### フロントエンド

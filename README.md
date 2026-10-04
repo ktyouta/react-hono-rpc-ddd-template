@@ -29,6 +29,7 @@ react-hono-rpc-ddd-template/
 ├── backend/                  # Hono バックエンド（Cloudflare Workers）
 │   ├── src/
 │   │   ├── domain/           # Entity・Value Object・Repository interface（何にも依存しない）
+│   │   │   ├── shared/       #   複数コンテキストで共有する概念（UserId・UserName）
 │   │   │   ├── user/         #   プロフィール管理
 │   │   │   ├── auth/         #   認証（login/logout/password/token/credential）
 │   │   │   └── sample/
@@ -52,7 +53,7 @@ react-hono-rpc-ddd-template/
 │   │   └── index.ts          # エントリポイント、AppType エクスポート
 │   ├── drizzle/              # マイグレーションファイル（drizzle-kit generate 出力先）
 │   ├── seed/                 # Seed データ
-│   ├── test/                 # テスト
+│   ├── test/                 # テスト用設定（マイグレーション適用・型定義）。テスト本体は実装と同じフォルダに置く
 │   ├── wrangler.jsonc        # Wrangler 設定（ローカル / 本番）
 │   └── drizzle.config.ts     # Drizzle Kit 設定
 ├── frontend/                 # React フロントエンド（Vite）
@@ -140,7 +141,7 @@ npm run dev:frontend
 
 Cloudflare D1（SQLite ベース）を使用し、Drizzle ORM でスキーマ管理する。
 
-- **スキーマ定義**: `backend/src/infrastructure/db/schema.ts`
+- **スキーマ定義**: `backend/src/infrastructure/db/schema/schema.ts`
 - **マイグレーション出力先**: `backend/drizzle/`
 - **Seed データ**: `backend/seed/seed.sql`
 
@@ -277,7 +278,20 @@ const data = await res.json();
 
 ### バックエンドの import パス
 
-バックエンドでは `@/` パスエイリアスを設定していない（相対パスで import する）。フロントエンドの `tsconfig` が `@/*` を `frontend/src/*` にマッピングしているため、バックエンドに同様のエイリアスを追加すると、RPC 型チェーンでバックエンドファイルを処理する際に誤解決される。
+バックエンドでは `@/` パスエイリアスを設定していない（相対パスで import する）。フロントエンドはバックエンドの型定義（`backend/dist-types`）を参照するため、バックエンドにエイリアスを追加すると型定義に `@/` が残り、フロントエンドの `tsconfig` の `@/*`（`frontend/src/*`）に誤解決される。
+
+### フロントエンドの型チェック構成
+
+`frontend/tsconfig.json` は `references` で以下をまとめるだけのファイルで、`npm run typecheck`（`tsc -b`）がすべてをチェックする。
+
+| tsconfig | 対象 |
+|---|---|
+| `tsconfig.app.json` | アプリ本体（`src/`、テストを除く） |
+| `tsconfig.test.json` | テストコード（vitest の globals の型はここだけに入れる） |
+| `tsconfig.node.json` | `vite.config.ts`・`vitest.config.ts`・`.storybook/main.ts` |
+| `tsconfig.functions.json` | Cloudflare Pages Functions（`functions/`。Workers ランタイムのため DOM の型を含めない） |
+
+フロントエンドはバックエンドのソースを直接型チェックせず、`backend/tsconfig.types.json` が出力する型定義（`backend/dist-types`、Git 管理外）を参照する。`tsc -b` が先に型定義を生成するため、手動で生成する必要はない。これにより、バックエンドのコードがフロントエンドの tsconfig 設定（ブラウザ用の型など）でチェックされることを防いでいる。
 
 ### DB 名・ワーカー名の変更
 

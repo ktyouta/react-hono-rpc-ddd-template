@@ -102,6 +102,8 @@ Step 3 のテストが通るように修正する。
 
 変更対象側のディレクトリ（`backend/` または `frontend/`）で `npx vitest run` を実行し、テストが通ることを確認する（`npm run test` はウォッチモードで終了しないため使わない）。
 
+テスト通過後、ルートで `npm run typecheck` と `npm run lint` を実行し、エラーが 0 件であることを確認する。
+
 ---
 
 ### Step 6: 横展開確認

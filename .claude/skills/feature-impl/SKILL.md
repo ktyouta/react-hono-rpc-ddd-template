@@ -69,10 +69,10 @@ impl-planner を実行し、設計内容・作成ファイル一覧・フォル�
 
 | ファイルパス | レイヤー | 操作 |
 |---|---|---|
-| backend/src/presentation/xxx/controller/get-xxx.controller.ts | Controller (Presentation) | 新規 |
-| backend/src/application/xxx/usecase/get-xxx.usecase.ts | Usecase (Application) | 新規 |
-| backend/src/domain/xxx/repository/get-xxx.repository.interface.ts | Repository interface (Domain) | 新規 |
-| backend/src/infrastructure/xxx/repository/get-xxx.repository.ts | Repository実装 (Infrastructure) | 新規 |
+| backend/src/presentation/xxx/controller/get-xxx/get-xxx.controller.ts | Controller (Presentation) | 新規 |
+| backend/src/application/xxx/usecase/get-xxx/get-xxx.usecase.ts | Usecase (Application) | 新規 |
+| backend/src/domain/xxx/repository/get-xxx/get-xxx.repository.interface.ts | Repository interface (Domain) | 新規 |
+| backend/src/infrastructure/xxx/repository/get-xxx/get-xxx.repository.ts | Repository実装 (Infrastructure) | 新規 |
 | frontend/src/features/xxx/api/get-xxx.ts | API | 新規 |
 | ... | ... | ... |
 
@@ -90,6 +90,7 @@ docs/[機能名]/spec.md が存在する場合のみ実施する。
 
 ### フォルダ構成チェック（CLAUDE.md 準拠）
 - エンドポイント単位のファイル分割になっているか
+- バックエンドのファイルが1単位1フォルダ（`<名前>/<名前>.<種別>.ts` + `index.ts`）になっており、テストも同じフォルダに置かれているか
 - `domain/{機能}/`（entity, value-object, repository interface）、`application/{機能}/`（usecase, dto）、`infrastructure/{機能}/repository/`、`presentation/{機能}/`（controller, schema）の4層構成に沿っているか
 - repository に .interface.ts が `domain/` 側にセットで存在するか
 - Container に -container.tsx サフィックスがついているか
@@ -146,7 +147,7 @@ Step 3 の実装計画に沿ってバックエンドを実装する。
 
 #### 【型チェック】実装完了後に型エラーがないか確認する
 
-`npx tsc --noEmit` を実行し、型エラーが 0 件になってから次の Step に進む。
+ルートで `npm run typecheck` と `npm run lint` を実行し、エラーが 0 件になってから次の Step に進む。
 
 ---
 
@@ -204,7 +205,7 @@ Step 3 の実装計画に沿ってフロントエンドを実装する。
 
 **7-c. 実装完了後に型エラーがないか確認する**
 
-`npx tsc --noEmit` を実行し、型エラーが 0 件になってから Step 8 に進む。
+ルートで `npm run typecheck` と `npm run lint` を実行し、エラーが 0 件になってから Step 8 に進む。
 
 ---
 
