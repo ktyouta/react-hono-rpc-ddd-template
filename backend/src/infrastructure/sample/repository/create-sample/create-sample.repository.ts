@@ -17,8 +17,8 @@ export class CreateSampleRepository implements ICreateSampleRepository {
     const result = await this.db
       .insert(sample)
       .values({
-        name: data.name,
-        description: data.description ?? null,
+        name: data.name.value,
+        description: data.description?.value ?? null,
         createdAt: now,
         updatedAt: now,
       })

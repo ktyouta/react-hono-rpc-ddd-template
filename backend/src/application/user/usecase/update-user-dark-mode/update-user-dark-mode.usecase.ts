@@ -1,6 +1,11 @@
-import { UserId } from "../../../../domain/shared";
+import type { UserId } from "../../../../domain/shared";
 import type { IUpdateUserDarkModeRepository } from "../../../../domain/user";
 import { UpdateUserDarkModeResultDto } from "../../dto";
+
+type PropsType = {
+  userId: UserId;
+  darkMode: boolean;
+}
 
 /**
  * ユーザーダークモード設定更新ユースケース
@@ -9,16 +14,20 @@ export class UpdateUserDarkModeUsecase {
   constructor(private readonly repository: IUpdateUserDarkModeRepository) { }
 
   /**
-   * @returns 更新結果。ユーザーが存在しない場合は null
+   * @returns 更新結果。対象ユーザーが存在しない場合は null
    */
-  async execute(userId: string, darkMode: boolean): Promise<UpdateUserDarkModeResultDto | null> {
-    const userIdObj = UserId.of(userId);
-
-    const updated = await this.repository.updateDarkMode(userIdObj, darkMode);
-    if (!updated) {
+  async execute({ userId, darkMode }: PropsType): Promise<UpdateUserDarkModeResultDto | null> {
+    const user = await this.repository.findUser(userId);
+    if (!user) {
       return null;
     }
 
-    return new UpdateUserDarkModeResultDto(darkMode);
+    user.updateDarkMode(darkMode);
+
+    if (!(await this.repository.updateDarkMode(user))) {
+      return null;
+    }
+
+    return new UpdateUserDarkModeResultDto(user.darkMode);
   }
 }

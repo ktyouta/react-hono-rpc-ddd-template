@@ -1,11 +1,12 @@
 import type { UpdateSampleEntity } from "../../entity";
+import type { SampleDescription, SampleId, SampleName } from "../../value-object";
 
 /**
  * サンプル更新入力型
  */
 export type UpdateSampleInput = {
-  name?: string;
-  description?: string;
+  name?: SampleName;
+  description?: SampleDescription;
 };
 
 /**
@@ -17,5 +18,5 @@ export interface IUpdateSampleRepository {
    * @param id サンプルID
    * @param data 更新データ
    */
-  update(id: number, data: UpdateSampleInput): Promise<UpdateSampleEntity | undefined>;
+  update(id: SampleId, data: UpdateSampleInput): Promise<UpdateSampleEntity | undefined>;
 }

@@ -8,6 +8,10 @@
     "typecheck": "tsc --noEmit -p .",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "db:generate": "drizzle-kit generate",
+    "db:check:local": "node --disable-warning=ExperimentalWarning scripts/check-migrations.mjs local",
+    "db:check:prod": "node --disable-warning=ExperimentalWarning scripts/check-migrations.mjs prod",
+    "predb:migrate:local": "npm run db:check:local",
+    "predb:migrate:prod": "npm run db:check:prod",
     "db:migrate:local": "wrangler d1 migrations apply hono-rest-template-db --local",
     "db:migrate:prod": "wrangler d1 migrations apply hono-rest-template-db --env production --remote",
     "db:seed:local": "wrangler d1 execute hono-rest-template-db --local --file=./seed/seed.sql",
@@ -17,6 +21,7 @@
     "@hono/zod-validator": "^0.4.2",
     "drizzle-orm": "^0.38.4",
     "hono": "^4.11.3",
+    "neverthrow": "^8.2.0",
     "ulid": "^3.0.2",
     "zod": "^3.24.1"
   },

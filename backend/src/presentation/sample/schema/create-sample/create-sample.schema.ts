@@ -2,16 +2,12 @@ import { z } from "zod";
 
 /**
  * サンプル作成リクエストスキーマ
+ *
+ * 型・構造のみを検証する。値の制約は値オブジェクトで判定する。
  */
 export const CreateSampleSchema = z.object({
-  name: z
-    .string()
-    .min(1, "名前は必須です")
-    .max(100, "名前は100文字以内で入力してください"),
-  description: z
-    .string()
-    .max(500, "説明は500文字以内で入力してください")
-    .optional(),
+  name: z.string(),
+  description: z.string().optional(),
 });
 
 export type CreateSampleSchemaType = z.infer<typeof CreateSampleSchema>;

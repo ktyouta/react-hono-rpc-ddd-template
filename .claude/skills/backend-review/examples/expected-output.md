@@ -15,7 +15,7 @@
 ### 違反あり
 - **ファイル**: backend/src/presentation/item/controller/create-item/create-item.controller.ts:18
 - **違反内容**: 「同名のアイテムが既に存在するか」の判定ロジックが Controller に直書きされている
-- **修正方針**: Usecase メソッド `findByName()` に切り出し、Controller は呼び出し結果で分岐する
+- **修正方針**: 判定を Usecase の `execute` 内に移し、重複時は保存せずに `err({ type: "DUPLICATE_NAME" })` を返す。Controller はエラー種別でレスポンスを分けるだけにする
 ```
 
 ---
@@ -76,12 +76,56 @@
 ### 違反あり
 - **ファイル**: backend/src/presentation/user/controller/create-user/create-user.controller.ts:53
 - **違反内容**: Controller が Repository を経由せず `db.batch` と Drizzle のクエリビルダーを直接呼び出している。Repository に定義済みの `insertUser` / `insertLoginUser` も使われず未使用のままになっている
-- **修正方針**: `ICreateUserRepository` に `createUserWithLogin(user, login): Promise<void>` を1メソッドとして定義し、その内部で `db.batch` を完結させる。Usecase はこの1メソッドを呼ぶだけにし、Controller・Usecase から Drizzle への直接依存を除去する
+- **修正方針**: `ICreateUserRepository` に `createUser(user): Promise<void>` を1メソッドとして定義し、その内部で `db.batch` を完結させる。Usecase はこの1メソッドを呼ぶだけにし、Controller・Usecase から Drizzle への直接依存を除去する
 ```
 
 ---
 
-## ケース5: 問題なし
+## ケース5: 違反あり（ファクトリではないメソッドで決定的でない処理を使っている）
+
+### 状況
+- `TaskEntity` の `duplicate()`（タスクを複製するメソッド）の中で `ulid()` を呼び、新しいタスク ID を生成している
+- `duplicate()` は ID 生成以外にタイトル等をコピーする処理を持ち、名前から ID が毎回変わることが読み取れない
+
+### 出力
+
+```
+## Backend Review 結果
+
+### 違反あり
+- **ファイル**: backend/src/domain/task/entity/task/task.entity.ts:42
+- **違反内容**: 決定的でない処理（`ulid()`）が、名前付きファクトリメソッド（`create()` 等）以外のメソッド `duplicate()` の中に書かれている
+- **修正方針**: ID の生成は既存の `TaskId.create()` に任せ、`duplicate(newId: TaskId)` のように生成済みの ID を引数で受け取る。`TaskId.create()` の呼び出しは Usecase で行う
+```
+
+---
+
+## ケース6: 違反あり（事前条件違反で例外を投げるのに @throws がない）
+
+### 状況
+- `TaskTitle` のコンストラクタが空文字・101 文字以上で例外を投げるが、JSDoc に `@throws` が書かれていない
+
+### 出力
+
+```
+## Backend Review 結果
+
+### 違反あり
+- **ファイル**: backend/src/domain/task/value-object/task-title/task-title.ts:12
+- **違反内容**: 事前条件違反で例外を投げるコンストラクタの JSDoc に `@throws` がない
+- **修正方針**: 以下のように事前条件を `@throws` で記載する
+  ```ts
+  /**
+   * @param taskTitle タスクタイトル
+   * @throws 前後の空白を除いて空の場合
+   * @throws 100 文字を超える場合
+   */
+  ```
+```
+
+---
+
+## ケース7: 問題なし
 
 ### 出力
 

@@ -2,24 +2,15 @@ import { describe, it, expect } from "vitest";
 import { GetSampleParamSchema } from "..";
 
 describe("GetSampleParamSchema", () => {
-  it("正常なIDでバリデーションを通過すること", () => {
+  it("形式は判定しないこと（数値以外の ID でも通過する）", () => {
     const result = GetSampleParamSchema.safeParse({
-      id: "123",
+      id: "abc",
     });
     expect(result.success).toBe(true);
   });
 
-  it("数値以外のIDでエラーになること", () => {
-    const result = GetSampleParamSchema.safeParse({
-      id: "abc",
-    });
-    expect(result.success).toBe(false);
-  });
-
-  it("空のIDでエラーになること", () => {
-    const result = GetSampleParamSchema.safeParse({
-      id: "",
-    });
+  it("ID がない場合にエラーになること", () => {
+    const result = GetSampleParamSchema.safeParse({});
     expect(result.success).toBe(false);
   });
 });

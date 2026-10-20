@@ -1,14 +1,27 @@
+import { err, ok, Result } from "neverthrow";
 import type { EnvConfig } from "../../../../config";
-import { RefreshToken } from "../../../../domain/auth";
-import { UserBirthday } from "../../../../domain/user";
-import { UserId, UserName } from "../../../../domain/shared";
-import type { IUpdateUserRepository } from "../../../../domain/user";
+import { RefreshToken, UserBirthday, UserName, type UserBirthdayError, type UserNameError } from "../../../../domain/user";
+import type { UserId } from "../../../../domain/shared";
+import type { IUpdateUserRepository, UserNameUniquenessDomainService } from "../../../../domain/user";
 import { UpdateUserResultDto } from "../../dto";
 
-export type UpdateUserResult =
-  | { status: "duplicate" }
-  | { status: "not_found" }
-  | { status: "success"; dto: UpdateUserResultDto };
+/**
+ * ユーザー更新の入力値の制約違反（field は入力値の項目名）
+ */
+export type UpdateUserInputError =
+  | { field: "name"; error: UserNameError }
+  | { field: "birthday"; error: UserBirthdayError };
+
+export type UpdateUserError =
+  | { type: "INVALID_INPUT"; errors: UpdateUserInputError[] }
+  | { type: "DUPLICATE_NAME" }
+  | { type: "NOT_FOUND" };
+
+type PropsType = {
+  userId: UserId;
+  name: string;
+  birthday: string;
+}
 
 /**
  * ユーザー更新ユースケース
@@ -16,26 +29,49 @@ export type UpdateUserResult =
 export class UpdateUserUsecase {
   constructor(
     private readonly repository: IUpdateUserRepository,
-    private readonly config: EnvConfig
+    private readonly config: EnvConfig,
+    private readonly uniquenessService: UserNameUniquenessDomainService,
   ) { }
 
-  async execute(userId: string, name: string, birthday: string): Promise<UpdateUserResult> {
-    const userIdObj = UserId.of(userId);
-    const userName = new UserName(name);
-    const userBirthday = new UserBirthday(birthday);
+  /**
+   * ユーザー情報を更新する
+   * @param userId 更新対象のユーザーID
+   * @param name ユーザー名
+   * @param birthday 生年月日（yyyyMMdd）
+   * @returns 成功時は更新後のユーザーとリフレッシュトークンの DTO。
+   * 入力値が制約を満たさない（違反はすべて返し、DB は問い合わせない）・ユーザー名が重複している・ユーザーが存在しない場合はエラー
+   */
+  async execute({ userId, name, birthday }: PropsType): Promise<Result<UpdateUserResultDto, UpdateUserError>> {
+    // 入力値の制約チェック
+    const input = Result.combineWithAllErrors([
+      UserName.create(name).mapErr((error): UpdateUserInputError => ({ field: "name", error })),
+      UserBirthday.create(birthday).mapErr((error): UpdateUserInputError => ({ field: "birthday", error })),
+    ]);
+    if (input.isErr()) {
+      return err({ type: "INVALID_INPUT", errors: input.error });
+    }
+    const [userName, userBirthday] = input.value;
 
-    const duplicated = await this.repository.checkUserNameExists(userIdObj, userName);
-    if (duplicated) {
-      return { status: "duplicate" };
+    // ユーザー名の重複チェック
+    if (await this.uniquenessService.isDuplicated(userId, userName)) {
+      return err({ type: "DUPLICATE_NAME" });
     }
 
-    const updateResult = await this.repository.updateUserWithLogin(userIdObj, userName, userBirthday);
-    if (!updateResult) {
-      return { status: "not_found" };
+    // 更新前のユーザー取得
+    const user = await this.repository.findUser(userId);
+    if (!user) {
+      return err({ type: "NOT_FOUND" });
     }
 
-    const refreshToken = await RefreshToken.create(userIdObj, this.config);
+    // ユーザー情報の変更
+    user.updateUser({ name: userName, birthday: userBirthday });
 
-    return { status: "success", dto: new UpdateUserResultDto(updateResult.entity, updateResult.darkMode, refreshToken) };
+    if (!(await this.repository.updateUser(user))) {
+      return err({ type: "NOT_FOUND" });
+    }
+
+    const refreshToken = await RefreshToken.create(userId, this.config);
+
+    return ok(new UpdateUserResultDto(user, refreshToken));
   }
 }

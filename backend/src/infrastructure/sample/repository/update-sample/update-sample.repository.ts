@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { UpdateSampleEntity } from "../../../../domain/sample";
-import type { IUpdateSampleRepository, UpdateSampleInput } from "../../../../domain/sample";
+import type { IUpdateSampleRepository, SampleId, UpdateSampleInput } from "../../../../domain/sample";
 import type { Database } from "../../../db";
 import { sample } from "../../../db";
 
@@ -13,15 +13,16 @@ export class UpdateSampleRepository implements IUpdateSampleRepository {
   /**
    * 更新
    */
-  async update(id: number, data: UpdateSampleInput): Promise<UpdateSampleEntity | undefined> {
+  async update(id: SampleId, data: UpdateSampleInput): Promise<UpdateSampleEntity | undefined> {
     const now = new Date().toISOString();
     const result = await this.db
       .update(sample)
       .set({
-        ...data,
+        name: data.name?.value,
+        description: data.description?.value,
         updatedAt: now,
       })
-      .where(and(eq(sample.id, id), eq(sample.deleteFlg, false)))
+      .where(and(eq(sample.id, id.value), eq(sample.deleteFlg, false)))
       .returning();
     return result[0] ? UpdateSampleEntity.fromRecord(result[0]) : undefined;
   }

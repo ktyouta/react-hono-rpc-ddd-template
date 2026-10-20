@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { GetSampleEntity } from "../../../../domain/sample";
-import type { IGetSampleRepository } from "../../../../domain/sample";
+import type { IGetSampleRepository, SampleId } from "../../../../domain/sample";
 import type { Database } from "../../../db";
 import { sample } from "../../../db";
 
@@ -13,11 +13,11 @@ export class GetSampleRepository implements IGetSampleRepository {
   /**
    * ID指定で取得
    */
-  async findById(id: number): Promise<GetSampleEntity | undefined> {
+  async findById(id: SampleId): Promise<GetSampleEntity | undefined> {
     const result = await this.db
       .select()
       .from(sample)
-      .where(and(eq(sample.id, id), eq(sample.deleteFlg, false)));
+      .where(and(eq(sample.id, id.value), eq(sample.deleteFlg, false)));
     return result[0] ? GetSampleEntity.fromRecord(result[0]) : undefined;
   }
 }

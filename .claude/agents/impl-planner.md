@@ -21,19 +21,24 @@ tools: Read, Glob, Grep
 ```
 1. DB スキーマ定義（Drizzle ORM, infrastructure/db/schema/schema.ts）
 2. マイグレーション SQL 生成（npm run db:generate）
-3. ドメイン Entity・Value Object・Repository interface（domain/<機能>/）
-4. リポジトリ実装（infrastructure/<機能>/repository/）
-5. ユースケース実装（application/<機能>/usecase/）
-6. コントローラー実装（presentation/<機能>/controller/）
-7. ルーター定義（presentation/<機能>/controller/<機能>/<機能>.controller.ts）
-8. ルーターの登録（src/index.ts の `.route()`）
-9. フロントエンド実装（features/<機能>/）
-10. テスト実装（バックエンドは実装と同じ単位フォルダ。例: application/<機能>/usecase/<名前>/<名前>.usecase.test.ts）
+3. Repository interface と、ドメイン Entity・Value Object・util の型（シグネチャのみ。中身は未実装）（domain/<機能>/ ・ util/）
+4. ドメイン・util の契約テスト作成（実装と同じ単位フォルダ。例: domain/<機能>/value-object/<名前>/<名前>.test.ts）→ 失敗することを確認する
+5. ドメイン Entity・Value Object・util の実装 → 4 の契約テストを通す
+6. ユースケースの契約テスト作成（application/<機能>/usecase/<名前>/<名前>.usecase.test.ts。Repository はスタブを使い DB を使わない）→ 失敗することを確認する
+7. ユースケース実装（application/<機能>/usecase/）→ 6 の契約テストを通す
+8. リポジトリ実装（infrastructure/<機能>/repository/）
+9. コントローラー実装（presentation/<機能>/controller/）
+10. ルーター定義（presentation/<機能>/controller/<機能>/<機能>.controller.ts）
+11. ルーターの登録（src/index.ts の `.route()`）
+12. フロントエンド実装（features/<機能>/）
+13. コントローラーの結合テスト（必要な場合。presentation/<機能>/controller/<名前>/<名前>.controller.test.ts）
 ```
 
-**機能がどのモジュール（`user` / `auth` / 等）に属するかは「変更理由の一致」で判断する。** 新しい機能が既存モジュールのどれにも当てはまらない場合のみ新規モジュールを切る。
+**契約テストは実装より先に書く（テスト駆動）。** 設計で定めた契約（クラス仕様）からテストを作成し、失敗を確認してから実装に進む。テストを実装の後に書くと、契約ではなく書いたコードの動きを確かめるテストになりやすいため。
 
-**モジュール跨ぎの依存**：Usecase が自モジュール以外の `domain/{他モジュール}/repository` interface に依存するのは正当（例: `create-user` usecase が `user` と `auth` 両方の repository を呼ぶ）。ただし domain 層の Entity/VO 同士が直接依存するのは禁止。
+**機能がどのモジュール（`user` / `sample` / 等）に属するかは、一緒に守る必要があるルール（集約）で判断する。** 新しい機能が既存モジュールのどれにも当てはまらない場合のみ新規モジュールを切る。
+
+**モジュール跨ぎの依存**：Usecase が自モジュール以外の `domain/{他モジュール}/repository` interface に依存するのは正当（例: `sample` の usecase が `user` の repository を呼ぶ）。ただし domain 層の Entity/VO 同士が直接依存するのは禁止。
 
 **複数テーブルへのアトミックな書き込み**：Cloudflare D1 は `db.transaction()` 非対応のため `db.batch` を使うが、これは必ず1つの Repository メソッド内（Infrastructure層）で完結させる。Usecase・Controller から Drizzle のクエリビルダーを直接呼び出す実装は計画に含めない。
 
@@ -54,7 +59,8 @@ tools: Read, Glob, Grep
 - 新しいルーターは `src/index.ts` に登録する（`rpc/index.ts` は `AppType` の型再 export 専用）
 - バックエンドのファイルは1単位1フォルダ（`<名前>/<名前>.<種別>.ts` + `index.ts`）で配置する
 - テストファイルは実装ファイルと同じ単位フォルダに配置する（`backend/test/` はマイグレーション適用・型定義の設定専用）
-- 複数のドメインで共有する VO（`UserId` / `UserName` 等）は `domain/shared/` に置く
+- Usecase のテストでは、Repository interface を満たすスタブ（オブジェクトリテラル + `vi.fn()`）を使い、DB を使わない
+- 複数のドメインで共有する VO（`UserId` 等）は `domain/shared/` に置く
 
 ### フロントエンド
 - 通常の API 呼び出しは `lib/rpc-client.ts` の `rpc` を使う
@@ -63,7 +69,7 @@ tools: Read, Glob, Grep
 - フロントエンドで API 用の型を新規定義しない
 
 ### DB・マイグレーション
-- スキーマ変更後は必ず `npm run db:generate` で SQL 確認
+- スキーマ変更後は db-migration スキルの手順（生成 → SQL の確認 → 必要なら退避・戻しの追加 → 使い捨て D1 での検証 → ローカルへの適用）をステップに含める
 - 本番適用前に生成された SQL をレビューする
 
 ## 出力形式
@@ -96,4 +102,5 @@ tools: Read, Glob, Grep
 
 ### 完了確認チェックリスト
 - [ ] チェック項目
+- [ ] 設計で定めた契約（クラス仕様）の各項目に対応するテストケースがある
 ```

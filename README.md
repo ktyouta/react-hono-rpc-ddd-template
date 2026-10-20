@@ -28,23 +28,19 @@ JWT 認証付きのフルスタックテンプレート。React フロントエ�
 react-hono-rpc-ddd-template/
 ├── backend/                  # Hono バックエンド（Cloudflare Workers）
 │   ├── src/
-│   │   ├── domain/           # Entity・Value Object・Repository interface（何にも依存しない）
-│   │   │   ├── shared/       #   複数コンテキストで共有する概念（UserId・UserName）
-│   │   │   ├── user/         #   プロフィール管理
-│   │   │   ├── auth/         #   認証（login/logout/password/token/credential）
+│   │   ├── domain/           # Aggregate・Entity・Value Object・Domain Service・Repository interface（何にも依存しない）
+│   │   │   ├── shared/       #   複数コンテキストで共有する概念（UserId）
+│   │   │   ├── user/         #   ユーザー（プロフィール・ログイン・パスワード・トークン）。aggregate・service を持つ
 │   │   │   └── sample/
 │   │   ├── application/      # Usecase・Result DTO（メインロジック。Repository interface 経由で domain を操作）
 │   │   │   ├── user/usecase/
-│   │   │   ├── auth/usecase/
 │   │   │   └── sample/usecase/
 │   │   ├── infrastructure/   # Repository 実装（Drizzle ORM）・DB スキーマ・DB クライアント
 │   │   │   ├── db/
 │   │   │   ├── user/repository/
-│   │   │   ├── auth/repository/
 │   │   │   └── sample/repository/
 │   │   ├── presentation/     # Controller・Zod スキーマ（HTTP 入出力のみ）
 │   │   │   ├── user/
-│   │   │   ├── auth/
 │   │   │   ├── health/
 │   │   │   └── sample/
 │   │   ├── config/           # 環境変数設定（EnvConfig）
@@ -52,6 +48,7 @@ react-hono-rpc-ddd-template/
 │   │   ├── rpc/              # RPC 型エクスポート専用
 │   │   └── index.ts          # エントリポイント、AppType エクスポート
 │   ├── drizzle/              # マイグレーションファイル（drizzle-kit generate 出力先）
+│   ├── scripts/              # マイグレーション適用前の検査（check-migrations.mjs）
 │   ├── seed/                 # Seed データ
 │   ├── test/                 # テスト用設定（マイグレーション適用・型定義）。テスト本体は実装と同じフォルダに置く
 │   ├── wrangler.jsonc        # Wrangler 設定（ローカル / 本番）
@@ -116,6 +113,8 @@ npm run db:seed:local
 
 > **実行順序**: 必ず `db:generate` → `db:migrate:local` → `db:seed:local` の順で実行すること。Seed はテーブルが存在する前提で動作する。
 
+> **マイグレーションの検証**: `db:migrate:local` / `db:migrate:prod` の前に、pre スクリプト（`db:check:*`、`backend/scripts/check-migrations.mjs`）が未適用のマイグレーションを使い捨ての D1 に当てて検証する。子孫テーブルの退避なしにテーブルを作り直す（`DROP TABLE`）・適用後に件数が減る・外部キーの違反がある場合は適用を止める。検証には `node:sqlite` を使うため **Node.js 22.5 以上**が必要。
+
 ### 4. 開発サーバー起動
 
 ターミナルを 2 つ開き、それぞれ実行する:
@@ -150,6 +149,7 @@ Cloudflare D1（SQLite ベース）を使用し、Drizzle ORM でスキーマ管
 | コマンド | 説明 |
 |---|---|
 | `npm run db:generate` | スキーマ変更からマイグレーション SQL を生成 |
+| `npm run db:check:local` | ローカル D1 の未適用マイグレーションを検証（`db:migrate:local` の前に自動実行） |
 | `npm run db:migrate:local` | ローカル D1 にマイグレーション適用 |
 | `npm run db:migrate:prod` | 本番 D1 にマイグレーション適用（リモート） |
 | `npm run db:seed:local` | ローカル D1 に Seed データ投入 |
@@ -312,3 +312,5 @@ const data = await res.json();
 | ワーカー名 | `backend/wrangler.jsonc` | `react-hono-rpc` | `"name"` フィールド |
 | DB 名 | `backend/wrangler.jsonc` | `hono-rest-template-db` | `"database_name"`（デフォルト + production の両方） |
 | DB 名 | `backend/package.json` | `hono-rest-template-db` | `db:migrate:*` / `db:seed:*` スクリプト内 |
+| DB 名 | `backend/scripts/check-migrations.mjs` | `hono-rest-template-db` | `DATABASE_NAME` |
+| DB 名 | `.claude/hooks/check-migration-command.mjs` | `hono-rest-template-db` | `isDirectApply` の正規表現 |

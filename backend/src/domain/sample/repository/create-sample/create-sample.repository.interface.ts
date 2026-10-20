@@ -1,11 +1,12 @@
 import type { CreateSampleEntity } from "../../entity";
+import type { SampleDescription, SampleName } from "../../value-object";
 
 /**
  * サンプル作成入力型
  */
 export type CreateSampleInput = {
-  name: string;
-  description?: string | null;
+  name: SampleName;
+  description: SampleDescription | null;
 };
 
 /**

@@ -9,24 +9,22 @@ describe("UpdateSampleSchema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("空のオブジェクトでもバリデーションを通過すること", () => {
+  it("空のオブジェクトでも検証を通過すること", () => {
     const result = UpdateSampleSchema.safeParse({});
     expect(result.success).toBe(true);
+  });
+
+  it("文字列でない値の場合にエラーになること", () => {
+    const result = UpdateSampleSchema.safeParse({ description: 1 });
+    expect(result.success).toBe(false);
   });
 });
 
 describe("UpdateSampleParamSchema", () => {
-  it("正常なIDでバリデーションを通過すること", () => {
-    const result = UpdateSampleParamSchema.safeParse({
-      id: "123",
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it("数値以外のIDでエラーになること", () => {
+  it("形式は判定しないこと（数値以外の ID でも通過する）", () => {
     const result = UpdateSampleParamSchema.safeParse({
       id: "abc",
     });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 });

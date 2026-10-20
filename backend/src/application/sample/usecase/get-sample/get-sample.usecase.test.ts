@@ -25,17 +25,25 @@ describe("GetSampleUsecase (get)", () => {
       )
     );
 
-    const result = await usecase.execute(1);
+    const result = await usecase.execute({ id: "1" });
 
-    expect(result).toBeInstanceOf(GetSampleResultDto);
-    expect(result?.value.id).toBe(1);
+    expect(result.isOk() && result.value).toBeInstanceOf(GetSampleResultDto);
+    expect(result.isOk() && result.value.value.id).toBe(1);
+    expect(vi.mocked(mockRepository.findById).mock.calls[0][0].value).toBe(1);
   });
 
-  it("findById - 存在しない場合にnullを返すこと", async () => {
+  it("findById - 存在しない場合に NOT_FOUND を返すこと", async () => {
     vi.mocked(mockRepository.findById).mockResolvedValue(undefined);
 
-    const result = await usecase.execute(999);
+    const result = await usecase.execute({ id: "999" });
 
-    expect(result).toBeNull();
+    expect(result.isErr() && result.error).toEqual({ type: "NOT_FOUND" });
+  });
+
+  it("ID が不正な場合は DB を問い合わせずに NOT_FOUND を返すこと", async () => {
+    const result = await usecase.execute({ id: "abc" });
+
+    expect(result.isErr() && result.error).toEqual({ type: "NOT_FOUND" });
+    expect(mockRepository.findById).not.toHaveBeenCalled();
   });
 });
